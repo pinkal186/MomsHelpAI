@@ -12,7 +12,7 @@ from storage.sqlite_storage import SQLiteStorage
 async def test_orchestrator_full_workflow():
     """Test complete orchestrator workflow: MealPlanner → WeekPlanner → GroceryPlanner."""
     
-    print("🎯 Testing OrchestratorAgent - Sequential Coordination")
+    print("Testing OrchestratorAgent - Sequential Coordination")
     print("=" * 80)
     
     # Setup: Ensure family data exists
@@ -34,16 +34,16 @@ async def test_orchestrator_full_workflow():
     
     try:
         storage.create_family(sharma_family)
-        print("✅ Family data loaded\n")
+        print("Family data loaded\n")
     except:
-        print("ℹ️  Family already exists\n")
+        print("Family already exists\n")
     
     # Test orchestrator with comprehensive request
     print("📝 User Request:")
     print("   'Plan this week with quick meals Monday-Tuesday,'")
     print("   'cooking break Wednesday, heavy meals Thursday if time allows'\n")
     
-    print("🔄 Expected Flow:")
+    print("Expected Flow:")
     print("   Step 1: MealPlannerAgent")
     print("           Input: family_id, request, preferences")
     print("           Output: meal_plan (7 days × 3 meals)")
@@ -58,7 +58,7 @@ async def test_orchestrator_full_workflow():
     print("")
     
     print("=" * 80)
-    print("⏳ Executing Orchestrator...\n")
+    print("Executing Orchestrator...\n")
     
     try:
         result = await orchestrator.handle_request(
@@ -71,17 +71,17 @@ async def test_orchestrator_full_workflow():
         )
         
         print("=" * 80)
-        print("✅ ORCHESTRATOR RESULT")
+        print("ORCHESTRATOR RESULT")
         print("=" * 80)
         
         # Display agents executed
         if "agents_executed" in result:
-            print(f"\n📊 Agents Executed: {', '.join(result['agents_executed'])}")
+            print(f"\nAgents Executed: {', '.join(result['agents_executed'])}")
             print(f"   Total agents: {len(result['agents_executed'])}")
         
         # Display meal plan
         if "meal_plan" in result and result["meal_plan"]:
-            print("\n🍽️  MEAL PLAN OUTPUT:")
+            print("\nMEAL PLAN OUTPUT:")
             print("-" * 80)
             if isinstance(result["meal_plan"], dict):
                 if "text_plan" in result["meal_plan"]:
@@ -97,7 +97,7 @@ async def test_orchestrator_full_workflow():
         
         # Display weekly schedule
         if "weekly_schedule" in result and result["weekly_schedule"]:
-            print("\n📅 WEEKLY SCHEDULE OUTPUT:")
+            print("\nWEEKLY SCHEDULE OUTPUT:")
             print("-" * 80)
             if isinstance(result["weekly_schedule"], dict):
                 if "text_plan" in result["weekly_schedule"]:
@@ -112,7 +112,7 @@ async def test_orchestrator_full_workflow():
         
         # Display shopping list
         if "shopping_list" in result and result["shopping_list"]:
-            print("\n🛒 SHOPPING LIST OUTPUT:")
+            print("\nSHOPPING LIST OUTPUT:")
             print("-" * 80)
             if isinstance(result["shopping_list"], dict):
                 if "text_plan" in result["shopping_list"]:
@@ -128,7 +128,7 @@ async def test_orchestrator_full_workflow():
         # Display summary
         if "execution_summary" in result:
             print("\n" + "=" * 80)
-            print(f"✅ {result['execution_summary']}")
+            print(f"{result['execution_summary']}")
             print("=" * 80)
         
         # Check for errors

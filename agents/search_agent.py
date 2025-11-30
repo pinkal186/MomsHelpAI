@@ -16,7 +16,7 @@ class SearchAgent(BaseAgent):
     """
     
     def __init__(self):
-        # Generic instruction - follows Kaggle pattern for flexibility
+        # Generic instruction for flexibility
         instruction = "Use the google_search tool to find information on the given topic. Return the raw search results."
         
         tools = [google_search]  # Only google_search - no mixing!

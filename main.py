@@ -41,7 +41,7 @@ class MomsHelperCLI:
     def print_banner(self):
         """Print welcome banner."""
         print("\n" + "="*70)
-        print("🏠  MOMSHELPERAI - Your AI Family Planning Assistant")
+        print("MOMSHELPERAI - Your AI Family Planning Assistant")
         print("="*70)
         print("Using Google ADK with Gemini 2.0 Flash")
         print(f"Session ID: {self.session_id[:8]}...")
@@ -49,20 +49,21 @@ class MomsHelperCLI:
     
     def print_help(self):
         """Print available commands."""
-        print("\n📋 Available Commands:")
-        print("-" * 70)
+        print("\n" + "="*70)
+        print("Available Commands:")
+        print("="*70)
         print("  help              - Show this help message")
         print("  family <id>       - Select family by ID (e.g., 'family sharma_001')")
         print("  families          - List all families in database")
         print("  quit / exit       - Exit application")
-        print("\n💬 Natural Language Requests (examples):")
-        print("-" * 70)
+        print("\nNatural Language Requests (examples):")
+        print("="*70)
         print("  'Plan meals for this week'")
         print("  'Create a shopping list for Diwali party'")
         print("  'Schedule activities for next weekend'")
         print("  'Find vegetarian breakfast recipes'")
         print("  'Plan a birthday party for 20 guests'")
-        print("-" * 70 + "\n")
+        print("="*70 + "\n")
     
     async def load_sample_data(self):
         """Load sample family data if database is empty."""
@@ -70,7 +71,7 @@ class MomsHelperCLI:
             families = self.storage.get_all_families()
             
             if not families:
-                print("📂 Loading sample family data...")
+                print("Loading sample family data...")
                 
                 # Sample Sharma family
                 sharma_family = {
@@ -96,23 +97,23 @@ class MomsHelperCLI:
                 self.storage.create_family(sharma_family)
                 self.current_family_id = 'sharma_001'
                 
-                print("✅ Sample family 'Sharma' loaded (ID: sharma_001)")
+                print("Sample family 'Sharma' loaded (ID: sharma_001)")
                 print(f"   Members: {len(sharma_family['members'])} (Rajesh, Priya, Aarav, Ananya)")
                 print(f"   Dietary: Vegetarian")
                 
             else:
-                print(f"✅ Found {len(families)} families in database")
+                print(f"Found {len(families)} families in database")
                 self.current_family_id = families[0]['id']
                 print(f"   Default family: {families[0]['name']} (ID: {self.current_family_id})")
             
             # Load sample recipes into ChromaDB
-            print("📚 Loading sample Indian recipes into ChromaDB...")
+            print("Loading sample Indian recipes into ChromaDB...")
             self.chroma.initialize_sample_recipes()
-            print("✅ Recipe database ready")
+            print("Recipe database ready")
             
         except Exception as e:
             logger.error(f"Error loading sample data: {str(e)}")
-            print(f"⚠️  Warning: Could not load sample data: {str(e)}")
+            print(f"Warning: Could not load sample data: {str(e)}")
     
     def list_families(self):
         """List all families in database."""
@@ -120,11 +121,11 @@ class MomsHelperCLI:
             families = self.storage.get_all_families()
             
             if not families:
-                print("\n❌ No families found in database")
+                print("\nNo families found in database")
                 return
             
-            print(f"\n👨‍👩‍👧‍👦 Families in Database ({len(families)}):")
-            print("-" * 70)
+            print(f"\nFamilies in Database ({len(families)}):")
+            print("="*70)
             
             for family in families:
                 print(f"\nID: {family['id']}")
@@ -132,12 +133,12 @@ class MomsHelperCLI:
                 print(f"Members: {len(family.get('members', []))}")
                 print(f"Dietary: {', '.join(family.get('dietary_restrictions', ['none']))}")
                 if family['id'] == self.current_family_id:
-                    print("👉 CURRENTLY SELECTED")
-                print("-" * 70)
+                    print("CURRENTLY SELECTED")
+                print("="*70)
                 
         except Exception as e:
             logger.error(f"Error listing families: {str(e)}")
-            print(f"❌ Error: {str(e)}")
+            print(f"Error: {str(e)}")
     
     def select_family(self, family_id: str):
         """Select a family by ID."""
@@ -145,17 +146,17 @@ class MomsHelperCLI:
             family = self.storage.get_family(family_id)
             
             if not family:
-                print(f"❌ Family '{family_id}' not found")
+                print(f"Family '{family_id}' not found")
                 return
             
             self.current_family_id = family_id
-            print(f"\n✅ Selected family: {family['name']} (ID: {family_id})")
+            print(f"\nSelected family: {family['name']} (ID: {family_id})")
             print(f"   Members: {len(family.get('members', []))}")
             print(f"   Dietary: {', '.join(family.get('dietary_restrictions', ['none']))}")
             
         except Exception as e:
             logger.error(f"Error selecting family: {str(e)}")
-            print(f"❌ Error: {str(e)}")
+            print(f"Error: {str(e)}")
     
     async def process_request(self, user_input: str):
         """
@@ -165,11 +166,11 @@ class MomsHelperCLI:
             user_input: Natural language request from user
         """
         if not self.current_family_id:
-            print("❌ Please select a family first (use 'families' to list available families)")
+            print("Please select a family first (use 'families' to list available families)")
             return
         
-        print(f"\n🤔 Processing request for {self.current_family_id}...")
-        print("⏳ This may take a moment as AI agents work together...\n")
+        print(f"\nProcessing request for {self.current_family_id}...")
+        print("This may take a moment as AI agents work together...\n")
         
         try:
             # Call orchestrator with family context
@@ -181,7 +182,7 @@ class MomsHelperCLI:
             
             # Display response
             print("="*70)
-            print("🤖 MomsHelperAI Response:")
+            print("MomsHelperAI Response:")
             print("="*70)
             
             # Extract text from response
@@ -195,21 +196,21 @@ class MomsHelperCLI:
             print("="*70 + "\n")
             
             # HITL: Ask for user approval
-            approval = input("👍 Is this plan acceptable? (yes/no/modify): ").strip().lower()
+            approval = input("Is this plan acceptable? (yes/no/modify): ").strip().lower()
             
             if approval == 'yes':
-                print("✅ Great! Plan approved and saved.")
+                print("Great! Plan approved and saved.")
             elif approval == 'no':
-                print("❌ Plan rejected. Please provide more details for a better plan.")
+                print("Plan rejected. Please provide more details for a better plan.")
             elif approval == 'modify':
-                modification = input("💬 What would you like to change? ")
-                print(f"\n🔄 Modifying plan based on: {modification}")
+                modification = input("What would you like to change? ")
+                print(f"\nModifying plan based on: {modification}")
                 # Re-process with modification
                 await self.process_request(f"{user_input} - MODIFICATION: {modification}")
             
         except Exception as e:
             logger.error(f"Error processing request: {str(e)}")
-            print(f"\n❌ Error: {str(e)}")
+            print(f"\nError: {str(e)}")
             print("Please try again or rephrase your request.\n")
     
     async def run(self):
@@ -219,8 +220,8 @@ class MomsHelperCLI:
         # Load sample data
         await self.load_sample_data()
         
-        print("\n💡 Type 'help' for available commands")
-        print("💡 Or just ask me anything in natural language!\n")
+        print("\nType 'help' for available commands")
+        print("Or just ask me anything in natural language!\n")
         
         while True:
             try:
@@ -232,7 +233,7 @@ class MomsHelperCLI:
                 
                 # Process commands
                 if user_input.lower() in ['quit', 'exit']:
-                    print("\n👋 Goodbye! Thanks for using MomsHelperAI")
+                    print("\nGoodbye! Thanks for using MomsHelperAI")
                     break
                 
                 elif user_input.lower() == 'help':
@@ -250,11 +251,11 @@ class MomsHelperCLI:
                     await self.process_request(user_input)
                 
             except KeyboardInterrupt:
-                print("\n\n👋 Goodbye! Thanks for using MomsHelperAI")
+                print("\n\nGoodbye! Thanks for using MomsHelperAI")
                 break
             except Exception as e:
                 logger.error(f"Unexpected error: {str(e)}")
-                print(f"\n❌ Unexpected error: {str(e)}\n")
+                print(f"\nUnexpected error: {str(e)}\n")
 
 
 async def main():
@@ -264,7 +265,7 @@ async def main():
         await cli.run()
     except Exception as e:
         logger.error(f"Fatal error: {str(e)}")
-        print(f"\n❌ Fatal error: {str(e)}")
+        print(f"\nFatal error: {str(e)}")
         sys.exit(1)
 
 

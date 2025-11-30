@@ -436,7 +436,7 @@ if __name__ == '__main__':
     logger.info(f"API Key configured: {Config.GOOGLE_API_KEY[:10]}...")
     
     print("\n" + "="*70)
-    print("🏠  MOMSHELPERAI - Flask REST API")
+    print("MOMSHELPERAI - Flask REST API")
     print("="*70)
     print("Using Google ADK with Gemini 2.0 Flash")
     print("\nAvailable endpoints:")

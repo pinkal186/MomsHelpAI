@@ -1,4 +1,4 @@
-"""BaseAgent - Wrapper for Google ADK Agent following Kaggle patterns."""
+"""BaseAgent - Wrapper for Google ADK Agent."""
 
 from typing import List, Optional, Any
 from google.adk.agents import Agent
@@ -36,7 +36,7 @@ class BaseAgent:
         logger.info(f"{name} initialized")
     
     async def run(self, user_message: str, user_id: str = "default_user", session_id: str = "debug_session") -> Any:
-        """Run agent using run_async pattern from Kaggle ADK examples."""
+        """Run agent using run_async pattern from ADK."""
         try:
             logger.info(f"{self.name}: {user_message[:80]}...")
             
@@ -54,7 +54,7 @@ class BaseAgent:
             raise
     
     async def run_debug(self, user_message: str) -> Any:
-        """Run agent with debug output using run_debug from Kaggle examples."""
+        """Run agent with debug output using run_debug from ADK."""
         try:
             response = await self.runner.run_debug(user_message)
             return response

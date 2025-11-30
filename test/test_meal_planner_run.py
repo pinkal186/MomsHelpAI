@@ -11,7 +11,7 @@ from storage.sqlite_storage import SQLiteStorage
 async def test_meal_planner():
     """Test meal planner with the specified request."""
     
-    print("🍽️ Testing MealPlanner Agent")
+    print("Testing MealPlanner Agent")
     print("=" * 70)
     
     # Ensure family data exists
@@ -33,15 +33,15 @@ async def test_meal_planner():
     
     try:
         storage.create_family(sharma_family)
-        print("✅ Sharma family data loaded\n")
+        print("Sharma family data loaded\n")
     except:
-        print("ℹ️  Sharma family already exists\n")
+        print("Sharma family already exists\n")
     
     # Test the meal planner
     print("📝 Request: Suggest easy and fast recepi for monday and tuesday,")
     print("           keep break on wednesday, thursday if not activity and")
     print("           have time then heavy meal.\n")
-    print("⏳ Calling MealPlanner Agent...\n")
+    print("Calling MealPlanner Agent...\n")
     
     try:
         response = await meal_planner_agent.plan_meals(
@@ -51,7 +51,7 @@ async def test_meal_planner():
         )
         
         print("=" * 70)
-        print("🤖 AGENT RESPONSE:")
+        print("AGENT RESPONSE:")
         print("=" * 70)
         
         # Extract the final text response from events
@@ -75,12 +75,12 @@ async def test_meal_planner():
             print(response)
         
         print("\n" + "=" * 70)
-        print("✅ Test completed successfully!")
+        print("Test completed successfully!")
         print("=" * 70)
         
     except Exception as e:
         print("=" * 70)
-        print("❌ ERROR:")
+        print("ERROR:")
         print("=" * 70)
         print(f"Error type: {type(e).__name__}")
         print(f"Error message: {str(e)}")
