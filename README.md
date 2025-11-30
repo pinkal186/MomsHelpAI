@@ -1,25 +1,25 @@
-# MomsHelperAI - Intelligent Family Planning System
+# 🏠 MomsHelperAI - Intelligent Family Planning System
 
-Multi-agent system built with Google Agent Development Kit (ADK) for automated Indian family meal planning, weekly scheduling, and grocery management using Gemini 2.0 Flash LLM.
+> 🤖 Multi-agent system built with Google Agent Development Kit (ADK) for automated Indian family meal planning, weekly scheduling, and grocery management using Gemini 2.0 Flash LLM.
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Description
+## 📖 Description
 
 MomsHelperAI is an AI-powered family planning assistant designed specifically for Indian households. It uses multiple specialized AI agents to handle meal planning, activity scheduling, and grocery list generation with cultural awareness and dietary preference management.
 
 The system uses Google's ADK framework with Gemini 2.0 Flash model to provide intelligent, context-aware planning that considers family size, dietary restrictions, regional cuisine preferences, and cultural events.
 
-Key capabilities:
-- Weekly meal planning with authentic Indian recipes
-- Family activity scheduling with age-appropriate suggestions
-- Automated grocery list generation with pantry tracking
-- Cultural event awareness (festivals, celebrations)
-- Multi-dietary restriction support (vegetarian, vegan, Jain, gluten-free)
+### ✨ Key Capabilities:
+- 🍛 **Weekly meal planning** with authentic Indian recipes
+- 📅 **Family activity scheduling** with age-appropriate suggestions
+- 🛒 **Automated grocery list generation** with pantry tracking
+- 🎉 **Cultural event awareness** (festivals, celebrations)
+- 🥗 **Multi-dietary restriction support** (vegetarian, vegan, Jain, gluten-free)
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Quick Start
+## 🚀 Quick Start
 
 ```bash
 # Install dependencies
@@ -38,204 +38,297 @@ python app.py
 jupyter notebook MomsHelperAI_Demo.ipynb
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 MomsHelperAI/
-├── agents/
+├── 🤖 agents/
 │   ├── base_agent.py          # Base wrapper for Google ADK agents
-│   ├── orchestrator.py        # Root coordinator agent
-│   ├── meal_planner.py        # Meal planning agent
-│   ├── recipe_refiner.py      # Recipe search with ChromaDB
-│   ├── week_planner.py        # Activity scheduling agent
-│   ├── grocery_planner.py     # Shopping list generator
-│   └── search_agent.py        # Web search integration
-├── models/
+│   ├── orchestrator.py        # 🎯 Root coordinator agent
+│   ├── meal_planner.py        # 🍽️ Meal planning agent
+│   ├── search_agent.py        # 🔍 Google search integration agent
+│   ├── week_planner.py        # 📅 Activity scheduling agent
+│   └── grocery_planner.py     # 🛒 Shopping list generator agent
+├── 📊 models/
 │   ├── family.py              # Family data model
 │   ├── meal.py                # Meal data model
 │   ├── grocery.py             # Grocery data model
 │   └── schedule.py            # Schedule data model
-├── storage/
+├── 💾 storage/
 │   ├── base_storage.py        # Storage interface
 │   ├── sqlite_storage.py      # SQLite implementation
 │   ├── chroma_storage.py      # ChromaDB vector storage
 │   └── firestore_storage.py  # Firestore cloud storage
-├── tools/
+├── 🛠️ tools/
 │   ├── recipe_tools.py        # Recipe management functions
 │   ├── pantry_tools.py        # Pantry inventory functions
 │   ├── schedule_tools.py      # Scheduling functions
 │   └── ingredient_tools.py    # Ingredient utilities
-├── utils/
+├── ⚙️ utils/
 │   ├── config.py              # Configuration management
 │   ├── logger.py              # Logging setup
 │   └── validators.py          # Input validation
-├── data/
+├── 📂 data/
 │   ├── activities_database.json    # Activity templates
 │   └── sample_family_data.json     # Sample family data
-├── test/
+├── 🧪 test/
 │   ├── test_meal_planner.py
 │   ├── test_meal_planner_run.py
 │   └── test_orchestrator_comprehensive.py
-├── main.py                    # CLI application
-├── app.py                     # Flask REST API
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
+├── main.py                    # 💻 CLI application
+├── app.py                     # 🌐 Flask REST API
+├── requirements.txt           # 📦 Python dependencies
+└── README.md                  # 📄 This file
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## System Architecture
+## 🏗️ System Architecture
 
-### Agent Flow
-
-```
-User Request
-    |
-    v
-OrchestratorAgent (Root Coordinator)
-    |
-    +---> MealPlannerAgent --> RecipeRefinerAgent (ChromaDB search)
-    |                              |
-    |                              v
-    |                          Recipe Database
-    |
-    +---> WeekPlannerAgent --> Activity Database
-    |
-    +---> GroceryPlannerAgent --> Pantry Database
-    |
-    v
-Consolidated Response
-```
-
-### Data Flow
+### 🔄 Agent Flow
 
 ```
-1. User Input --> Orchestrator
-2. Orchestrator --> MealPlanner (generates meal plan + grocery list)
-3. MealPlanner --> RecipeRefiner (searches recipes in ChromaDB)
-4. Orchestrator --> WeekPlanner (creates schedule using meal plan)
-5. Orchestrator --> GroceryPlanner (consolidates grocery items)
-6. Orchestrator --> User (returns complete plan)
+👤 User Request
+    │
+    ▼
+🎯 OrchestratorAgent (Root Coordinator)
+    │
+    ├──▶ 🍽️ MealPlannerAgent ──▶ 🔍 SearchAgent (Google Search for recipes)
+    │                              │
+    │                              ▼
+    │                          🌐 Web Recipe Sources
+    │
+    ├──▶ 📅 WeekPlannerAgent ──▶ 📂 Activity Database
+    │
+    ├──▶ 🛒 GroceryPlannerAgent ──▶ 💾 Pantry Database
+    │
+    ▼
+✅ Consolidated Response to User
 ```
 
-### Database Architecture
-
-**SQLite (Relational Data)**
-- families: Family profiles and preferences
-- meals: Meal plans and history
-- pantry: Inventory tracking
-- schedules: Activity schedules
-
-**ChromaDB (Vector Search)**
-- recipes: Indian recipe embeddings for semantic search
-- preferences: Family preference patterns
-
-**JSON Files (Static Data)**
-- activities_database.json: Age-appropriate activity templates
-- sample_family_data.json: Default family configurations
-
-==============================================================================
-
-## Agent and Tool Flow
-
-### 1. OrchestratorAgent
-- Type: Root Coordinator
-- Pattern: Sequential execution
-- Tools: Sub-agents as tools
-- Function: Coordinates all sub-agents and manages workflow
-
-### 2. MealPlannerAgent
-- Type: Specialized planner
-- Tools: RecipeRefinerAgent (AgentTool), family data functions
-- Input: Family ID, dietary restrictions, number of days
-- Output: JSON with meal_plan array and grocery_list object
-- Function: Generates culturally appropriate meal plans
-
-### 3. RecipeRefinerAgent
-- Type: Search specialist
-- Tools: ChromaDB vector search
-- Input: Recipe query, dietary filters
-- Output: Matching recipes with ingredients
-- Function: Semantic recipe search
-
-### 4. WeekPlannerAgent
-- Type: Scheduling specialist
-- Tools: Activity database, schedule functions
-- Input: Meal plan, family data, date range
-- Output: Weekly schedule with activities
-- Function: Creates balanced activity schedules
-
-### 5. GroceryPlannerAgent
-- Type: Shopping specialist
-- Tools: Pantry check, ingredient consolidation
-- Input: Grocery list from meals, pantry inventory
-- Output: Optimized shopping list by category
-- Function: Deduplicates and organizes shopping items
-
-==============================================================================
-
-## Sample Output
-
-### CLI Example
+### 📊 Data Flow
 
 ```
-MOMSHELPERAI - Your AI Family Planning Assistant
-==============================================================================
+1️⃣ User Input ────────────────────────▶ Orchestrator
+                                          │
+2️⃣ Orchestrator ──▶ MealPlanner ──▶ SearchAgent (Google Search)
+                         │                │
+                         │                ▼
+                         │            Web Recipes
+                         │
+                         ▼
+                   Meal Plan + Grocery List
+                         │
+3️⃣ Orchestrator ──▶ WeekPlanner ──▶ Creates schedule using meal plan
+                         │
+                         ▼
+                   Weekly Schedule
+                         │
+4️⃣ Orchestrator ──▶ GroceryPlanner ──▶ Consolidates grocery items
+                         │
+                         ▼
+                   Optimized Shopping List
+                         │
+5️⃣ Orchestrator ────────────────────────▶ User (Complete Plan)
+```
+
+### 💾 Database Architecture
+
+**🗄️ SQLite (Relational Data)**
+- `families`: Family profiles and preferences
+- `meals`: Meal plans and history
+- `pantry`: Inventory tracking
+- `schedules`: Activity schedules
+
+**🔍 ChromaDB (Vector Search)**
+- `recipes`: Indian recipe embeddings for semantic search
+- `preferences`: Family preference patterns
+
+**📄 JSON Files (Static Data)**
+- `activities_database.json`: Age-appropriate activity templates
+- `sample_family_data.json`: Default family configurations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🤖 Agent Details & Tool Flow
+
+### 1️⃣ 🎯 OrchestratorAgent
+- **Type**: Root Coordinator
+- **Pattern**: Sequential execution
+- **Tools**: Sub-agents as tools (AgentTool)
+- **Tool Type**: `AgentTool` (wraps other agents)
+- **Function**: Coordinates all sub-agents and manages workflow
+- **Input**: User natural language request
+- **Output**: Consolidated response from all agents
+
+---
+
+### 2️⃣ 🍽️ MealPlannerAgent
+- **Type**: Specialized planner
+- **Tools Used**:
+  - `SearchAgent` (AgentTool) - For finding recipes via Google Search
+  - `get_family_preferences` (FunctionTool) - Retrieves family dietary data
+  - `save_meal_plan` (FunctionTool) - Saves meal plan to database
+- **Tool Type**: Mixed (`AgentTool` + `FunctionTool`)
+- **Input**: 
+  - `family_id`: Family identifier
+  - `request`: Natural language request
+  - `num_days`: Number of days to plan (default: 7)
+  - `dietary_restrictions`: List of restrictions
+  - `preferences`: Cuisine and other preferences
+- **Output**: JSON with:
+  ```json
+  {
+    "meal_plan": [...],
+    "grocery_list": {...},
+    "summary": "..."
+  }
+  ```
+- **Function**: Generates culturally appropriate meal plans with recipes from web search
+
+---
+
+### 3️⃣ 🔍 SearchAgent
+- **Type**: Search specialist
+- **Tools Used**:
+  - `google_search` (GoogleSearch) - Google search tool from ADK
+- **Tool Type**: `google_search` (Cannot be mixed with other tool types)
+- **Input**: Search query with dietary filters
+- **Output**: Raw search results from Google
+- **Function**: Isolated agent for web search (required due to tool type restrictions)
+- **Note**: ⚠️ This agent uses ONLY `google_search` - cannot mix with FunctionTool or CodeExecutionTool
+
+---
+
+### 4️⃣ 📅 WeekPlannerAgent
+- **Type**: Scheduling specialist
+- **Tools Used**:
+  - `get_activity_suggestions` (FunctionTool) - Retrieves activities from database
+  - `save_schedule_item` (FunctionTool) - Saves scheduled activities
+- **Tool Type**: `FunctionTool`
+- **Input**:
+  ```json
+  {
+    "week_start_date": "2025-12-02",
+    "meal_plan": {...},
+    "kids_activities_db": [...]
+  }
+  ```
+- **Output**:
+  ```json
+  {
+    "weekly_schedule": {...},
+    "weekly_summary": {...},
+    "agent_suggestion": "..."
+  }
+  ```
+- **Function**: Creates balanced weekly schedules with meals and activities
+
+---
+
+### 5️⃣ 🛒 GroceryPlannerAgent
+- **Type**: Shopping specialist
+- **Tools Used**:
+  - `check_pantry_inventory` (FunctionTool) - Checks what's in stock
+  - `consolidate_shopping_list` (FunctionTool) - Merges duplicate items
+  - `organize_by_sections` (FunctionTool) - Organizes by store sections
+  - `save_shopping_to_pantry` (FunctionTool) - Updates pantry database
+- **Tool Type**: `FunctionTool`
+- **Input**:
+  ```json
+  {
+    "meal_plan": {...},
+    "current_pantry_stock": {...}
+  }
+  ```
+- **Output**:
+  ```json
+  {
+    "shopping_list": {...},
+    "total_items": 24,
+    "items_already_in_stock": [...],
+    "stock_update_required": [...]
+  }
+  ```
+- **Function**: Deduplicates and organizes shopping items by checking pantry
+
+---
+
+### 🔧 Tool Types Summary
+
+| Agent | Tool Type | Specific Tools |
+|-------|-----------|---------------|
+| 🎯 OrchestratorAgent | `AgentTool` | MealPlanner, WeekPlanner, GroceryPlanner |
+| 🍽️ MealPlannerAgent | `AgentTool` + `FunctionTool` | SearchAgent, get_family_preferences, save_meal_plan |
+| 🔍 SearchAgent | `google_search` | google_search (isolated) |
+| 📅 WeekPlannerAgent | `FunctionTool` | get_activity_suggestions, save_schedule_item |
+| 🛒 GroceryPlannerAgent | `FunctionTool` | check_pantry, consolidate_shopping_list, organize_by_sections, save_shopping_to_pantry |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📋 Sample Output
+
+### 💻 CLI Example
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║          MOMSHELPERAI - Your AI Family Planning Assistant               ║
+╚══════════════════════════════════════════════════════════════════════════╝
 Session ID: abc123...
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Loading sample family data...
-Sample family 'Sharma' loaded (ID: sharma_001)
-Members: 4 (Rajesh, Priya, Aarav, Ananya)
-Dietary: Vegetarian
+✅ Sample family 'Sharma' loaded (ID: sharma_001)
+👨‍👩‍👧‍👦 Members: 4 (Rajesh, Priya, Aarav, Ananya)
+🥗 Dietary: Vegetarian
 
 You: Plan meals for this week
 
-Processing request for sharma_001...
+⏳ Processing request for sharma_001...
 This may take a moment as AI agents work together...
 
-==============================================================================
-MomsHelperAI Response:
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 MomsHelperAI Response:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-WEEKLY MEAL PLAN (7 Days)
+🍽️ WEEKLY MEAL PLAN (7 Days)
 
 Day 1 - Monday:
-  Breakfast: Poha with peanuts and curry leaves
-  Lunch: Dal tadka, jeera rice, mixed vegetable sabzi
-  Dinner: Paneer butter masala, roti, cucumber raita
+  🌅 Breakfast: Poha with peanuts and curry leaves
+  🌞 Lunch: Dal tadka, jeera rice, mixed vegetable sabzi
+  🌙 Dinner: Paneer butter masala, roti, cucumber raita
 
 Day 2 - Tuesday:
-  Breakfast: Idli with sambhar and coconut chutney
-  Lunch: Rajma curry, steamed rice, cabbage stir-fry
-  Dinner: Aloo paratha with curd and pickle
+  🌅 Breakfast: Idli with sambhar and coconut chutney
+  🌞 Lunch: Rajma curry, steamed rice, cabbage stir-fry
+  🌙 Dinner: Aloo paratha with curd and pickle
 
 ... (continues for 7 days)
 
-GROCERY SHOPPING LIST
+🛒 GROCERY SHOPPING LIST
 
-Vegetables:
-  - Tomatoes: 2 kg
-  - Onions: 1.5 kg
-  - Potatoes: 2 kg
-  - Cauliflower: 1 head
-  - Spinach: 500g
+🥬 Vegetables:
+  ✓ Tomatoes: 2 kg
+  ✓ Onions: 1.5 kg
+  ✓ Potatoes: 2 kg
+  ✓ Cauliflower: 1 head
+  ✓ Spinach: 500g
 
-Dairy:
-  - Milk: 3 liters
-  - Paneer: 500g
-  - Curd: 1 kg
+🥛 Dairy:
+  ✓ Milk: 3 liters
+  ✓ Paneer: 500g
+  ✓ Curd: 1 kg
 
 ... (complete categorized list)
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Is this plan acceptable? (yes/no/modify):
 ```
 
-### API Response Example
+### 🌐 API Response Example
 
 ```json
 {
@@ -282,54 +375,57 @@ Is this plan acceptable? (yes/no/modify):
 }
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-- AI Framework: Google Agent Development Kit (ADK)
-- LLM: Gemini 2.0 Flash
-- Vector Database: ChromaDB (recipe search)
-- Relational Database: SQLite (local), Firestore (cloud option)
-- Web Framework: Flask
-- Language: Python 3.10+
-- Async: AsyncIO
+| Component | Technology |
+|-----------|-----------|
+| 🤖 AI Framework | Google Agent Development Kit (ADK) |
+| 🧠 LLM Model | Gemini 2.0 Flash (`gemini-2.5-flash-lite`) |
+| 🔍 Vector Database | ChromaDB (recipe search) |
+| 💾 Relational Database | SQLite (local), Firestore (cloud option) |
+| 🌐 Web Framework | Flask |
+| 🐍 Programming Language | Python 3.10+ |
+| ⚡ Async Processing | AsyncIO |
+| 🔧 Tools | FunctionTool, AgentTool, google_search |
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Setup Instructions
+## ⚙️ Setup Instructions
 
-### Prerequisites
-- Python 3.10 or higher
-- Google API Key (Gemini API)
-- pip package manager
+### 📋 Prerequisites
+- ✅ Python 3.10 or higher
+- ✅ Google API Key (Gemini API)
+- ✅ pip package manager
 
-### Installation
+### 📥 Installation
 
-1. Clone the repository
+**1️⃣ Clone the repository**
 ```bash
 git clone <repository-url>
 cd MomsHelperAI
 ```
 
-2. Install dependencies
+**2️⃣ Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configure environment
+**3️⃣ Configure environment**
 ```bash
 # Create .env file
 echo "GOOGLE_API_KEY=your_api_key_here" > .env
 ```
 
-4. Initialize databases
+**4️⃣ Initialize databases**
 ```bash
 # Databases are auto-created on first run
 # SQLite: ./data/momshelper.db
 # ChromaDB: ./chroma.db
 ```
 
-5. Run the application
+**5️⃣ Run the application**
 ```bash
 # CLI mode
 python main.py
@@ -338,43 +434,48 @@ python main.py
 python app.py
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Usage
+## 💬 Usage
 
-### CLI Commands
-
-```
-help                    Show available commands
-family <id>             Select family by ID
-families                List all families
-quit/exit               Exit application
-
-Natural language examples:
-  "Plan meals for this week"
-  "Create shopping list for Diwali party"
-  "Schedule weekend activities"
-  "Find vegetarian breakfast recipes"
-```
-
-### REST API Endpoints
+### 🖥️ CLI Commands
 
 ```bash
-# Chat endpoint
+help                    # Show available commands
+family <id>             # Select family by ID
+families                # List all families
+quit/exit               # Exit application
+```
+
+**Natural language examples:**
+```
+💬 "Plan meals for this week"
+💬 "Create shopping list for Diwali party"
+💬 "Schedule weekend activities"
+💬 "Find vegetarian breakfast recipes"
+```
+
+### 🌐 REST API Endpoints
+
+**📨 Chat endpoint**
+```bash
 POST /api/chat
 Content-Type: application/json
+
 {
   "message": "Plan dinner for tonight",
   "family_id": "sharma_001"
 }
+```
 
-# Health check
+**🏥 Health check**
+```bash
 GET /health
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Testing
+## 🧪 Testing
 
 Run comprehensive tests:
 ```bash
@@ -386,10 +487,67 @@ python test/test_meal_planner.py
 python test/test_orchestrator_comprehensive.py
 ```
 
-==============================================================================
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## License
+## 🚀 Future Enhancements
 
-Built for educational purposes.
+### 📅 Calendar Integration
+- **Google Calendar Sync**: Automatically sync meal schedules and activities to family Google Calendar
+- **iCal Export**: Export weekly plans to `.ics` format for Apple Calendar, Outlook, etc.
+- **Smart Reminders**: Set up automated reminders for meal prep, shopping trips, and activities
+- **Conflict Detection**: Check calendar for existing events before scheduling activities
+- **Multi-Calendar Support**: Integrate individual family member calendars for personalized scheduling
 
-==============================================================================
+### 📧 Email Integration
+- **Weekly Plan Emails**: Send automated weekly meal plan and shopping list via email
+- **Shopping List SMS**: Text shopping list to family members when they're near grocery stores
+- **Recipe Sharing**: Email detailed recipes with instructions to family members
+- **Notification System**: Email alerts for upcoming events, low pantry stock, and meal prep reminders
+- **PDF Reports**: Generate and email beautifully formatted PDF meal plans and shopping lists
+
+### 🔮 Additional Future Features
+- **🍕 Restaurant Integration**: Suggest nearby restaurants when too busy to cook
+- **💰 Budget Tracking**: Track grocery expenses and suggest budget-friendly alternatives
+- **👥 Multi-Family Sharing**: Share recipes and meal plans with friends and extended family
+- **📊 Nutrition Analytics**: Track nutritional values and health goals
+- **🎯 Meal Preferences Learning**: AI learns family preferences over time for better suggestions
+- **🌍 Regional Cuisine Expansion**: Add more regional Indian cuisines (Bengali, Gujarati, Kerala, etc.)
+- **🎉 Festival Special Plans**: Pre-made plans for Diwali, Holi, Eid, Christmas celebrations
+- **🏋️ Fitness Integration**: Sync with fitness apps for calorie-aware meal planning
+- **🗣️ Voice Assistant**: Integration with Google Assistant, Alexa for hands-free planning
+- **📱 Mobile App**: Native iOS and Android apps with push notifications
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+## 📄 License
+
+Built for educational purposes as part of Google Agentic AI Capstone Project.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 👥 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📞 Support
+
+For issues and questions:
+- 📝 Open an issue on GitHub
+- 📧 Contact the development team
+- 📚 Check the documentation in `/docs` folder
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---
+
+<div align="center">
+
+### 🌟 Built with ❤️ using Google Agent Development Kit (ADK) & Gemini 2.0 Flash
+
+**MomsHelperAI** - Making Family Planning Smarter, One Meal at a Time! 🍛
+
+</div>
+
