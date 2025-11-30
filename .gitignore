@@ -1,0 +1,8 @@
+.env
+*.db
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
+data/chroma_db/
+data/momshelper.db
+credentials.json

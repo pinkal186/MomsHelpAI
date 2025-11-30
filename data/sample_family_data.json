@@ -1,0 +1,125 @@
+{
+  "family_sharma": {
+    "family_id": "sharma_family_001",
+    "family_name": "Sharma Family",
+    "members": [
+      {
+        "name": "Priya",
+        "age": 35,
+        "role": "Mother",
+        "allergies": [],
+        "preferences": ["paneer dishes", "south indian", "dal makhani"]
+      },
+      {
+        "name": "Rajesh",
+        "age": 38,
+        "role": "Father",
+        "allergies": [],
+        "preferences": ["chicken curry", "biryani", "chole bhature"]
+      },
+      {
+        "name": "Aarav",
+        "age": 10,
+        "role": "Son",
+        "allergies": [],
+        "preferences": ["pizza", "pasta", "aloo paratha", "maggi"]
+      },
+      {
+        "name": "Ananya",
+        "age": 7,
+        "role": "Daughter",
+        "allergies": ["peanuts"],
+        "preferences": ["dosa", "idli", "rajma chawal"]
+      }
+    ],
+    "dietary_restrictions": ["no beef", "vegetarian options needed"],
+    "preferred_cuisine": ["North Indian", "South Indian", "Continental"],
+    "budget_weekly": 8000,
+    "pantry_inventory": {
+      "rice": {
+        "quantity": "5kg",
+        "category": "grains"
+      },
+      "wheat_flour": {
+        "quantity": "10kg",
+        "category": "grains"
+      },
+      "toor_dal": {
+        "quantity": "2kg",
+        "category": "protein"
+      },
+      "moong_dal": {
+        "quantity": "1kg",
+        "category": "protein"
+      },
+      "oil": {
+        "quantity": "2L",
+        "category": "spices"
+      },
+      "ghee": {
+        "quantity": "500g",
+        "category": "dairy"
+      },
+      "onion": {
+        "quantity": "3kg",
+        "category": "vegetables"
+      },
+      "potato": {
+        "quantity": "5kg",
+        "category": "vegetables"
+      },
+      "tomato": {
+        "quantity": "2kg",
+        "category": "vegetables"
+      },
+      "ginger_garlic_paste": {
+        "quantity": "200g",
+        "category": "spices"
+      },
+      "turmeric": {
+        "quantity": "200g",
+        "category": "spices"
+      },
+      "garam_masala": {
+        "quantity": "100g",
+        "category": "spices"
+      },
+      "cumin_seeds": {
+        "quantity": "150g",
+        "category": "spices"
+      },
+      "coriander_powder": {
+        "quantity": "200g",
+        "category": "spices"
+      },
+      "red_chilli_powder": {
+        "quantity": "150g",
+        "category": "spices"
+      },
+      "milk": {
+        "quantity": "2L",
+        "category": "dairy"
+      },
+      "curd": {
+        "quantity": "500g",
+        "category": "dairy"
+      },
+      "paneer": {
+        "quantity": "250g",
+        "category": "protein"
+      }
+    },
+    "kids_activities": {
+      "Aarav": ["Cricket Coaching", "Swimming Classes", "Hindi Tuition"],
+      "Ananya": ["Kathak Dance Class", "Abacus Mental Math", "Art and Craft Workshop"]
+    },
+    "meal_preferences": {
+      "breakfast_time": "08:00",
+      "lunch_time": "13:30",
+      "dinner_time": "20:30",
+      "favorite_breakfasts": ["poha", "upma", "paratha with curd", "idli sambhar", "dosa"],
+      "favorite_lunches": ["dal chawal", "rajma chawal", "chole with rice", "vegetable pulao"],
+      "favorite_dinners": ["paneer butter masala", "dal makhani", "chicken curry", "biryani", "palak paneer"]
+    }
+  }
+}

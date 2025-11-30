@@ -1,0 +1,100 @@
+{
+  "activities": [
+    {
+      "id": "act_001",
+      "name": "Cricket Coaching",
+      "category": "sports",
+      "age_range": [8, 16],
+      "schedule": {
+        "days": ["Tuesday", "Thursday", "Saturday"],
+        "time": "17:00"
+      },
+      "duration_minutes": 90,
+      "location": "Society Ground"
+    },
+    {
+      "id": "act_002",
+      "name": "Kathak Dance Class",
+      "category": "arts",
+      "age_range": [6, 14],
+      "schedule": {
+        "days": ["Monday", "Wednesday"],
+        "time": "16:30"
+      },
+      "duration_minutes": 60,
+      "location": "Sangeet Mahal"
+    },
+    {
+      "id": "act_003",
+      "name": "Abacus Mental Math",
+      "category": "education",
+      "age_range": [5, 10],
+      "schedule": {
+        "days": ["Friday"],
+        "time": "16:00"
+      },
+      "duration_minutes": 75,
+      "location": "Learning Center"
+    },
+    {
+      "id": "act_004",
+      "name": "Swimming Classes",
+      "category": "sports",
+      "age_range": [5, 15],
+      "schedule": {
+        "days": ["Monday", "Wednesday", "Friday"],
+        "time": "06:30"
+      },
+      "duration_minutes": 60,
+      "location": "Community Pool"
+    },
+    {
+      "id": "act_005",
+      "name": "Hindi Tuition",
+      "category": "education",
+      "age_range": [8, 14],
+      "schedule": {
+        "days": ["Tuesday", "Thursday"],
+        "time": "15:30"
+      },
+      "duration_minutes": 60,
+      "location": "Sharma Ji Home"
+    },
+    {
+      "id": "act_006",
+      "name": "Art and Craft Workshop",
+      "category": "arts",
+      "age_range": [4, 12],
+      "schedule": {
+        "days": ["Saturday"],
+        "time": "15:00"
+      },
+      "duration_minutes": 90,
+      "location": "Creative Studio"
+    },
+    {
+      "id": "act_007",
+      "name": "Yoga for Kids",
+      "category": "wellness",
+      "age_range": [6, 14],
+      "schedule": {
+        "days": ["Sunday"],
+        "time": "07:00"
+      },
+      "duration_minutes": 45,
+      "location": "Wellness Center"
+    },
+    {
+      "id": "act_008",
+      "name": "Tabla Music Class",
+      "category": "arts",
+      "age_range": [7, 15],
+      "schedule": {
+        "days": ["Saturday"],
+        "time": "17:00"
+      },
+      "duration_minutes": 60,
+      "location": "Music Academy"
+    }
+  ]
+}
