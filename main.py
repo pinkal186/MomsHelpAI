@@ -107,7 +107,7 @@ class MomsHelperCLI:
                 print(f"   Default family: {families[0]['name']} (ID: {self.current_family_id})")
             
             # Load sample recipes into ChromaDB
-            print("Loading sample Indian recipes into ChromaDB...")
+            print("Loading sample recipes into ChromaDB...")
             self.chroma.initialize_sample_recipes()
             print("Recipe database ready")
             

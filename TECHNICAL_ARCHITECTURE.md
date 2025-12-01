@@ -197,7 +197,7 @@ meal_response = await meal_planner_agent.plan_meals(
     preferences={"cuisine": ["Indian"]}
 )
 # MealPlanner internally:
-#   - Calls google_search("vegetarian Indian recipes")
+#   - Calls google_search("recipes")
 #   - Calls storage.get_pantry_inventory("sharma_001") → reads pantry table
 #   - Calls storage.save_weekly_plan({meal_plan: ...}) → writes weekly_plans table
 #   - Returns JSON: {meal_plan: [...], grocery_list: {...}, summary: "..."}
@@ -379,7 +379,7 @@ def run_with_human_approval(user_request, session_id):
     "spices": [{"item": "turmeric", "quantity": "50g"}],
     "dairy": [{"item": "paneer", "quantity": "500g"}]
   },
-  "summary": "7-day vegetarian meal plan with Indian cuisine"
+  "summary": "7-day vegetarian meal plan"
 }
 ```
 
@@ -639,7 +639,7 @@ results = parallel_runner.run()
 │   • user_preferences = "quick meals on weekdays"                   │
 │                                                                     │
 │ Processing:                                                         │
-│   1. google_search("quick vegetarian Indian recipes")             │
+│   1. google_search("quick recipes")             │
 │   2. Filter results by: dietary restrictions, past meals           │
 │   3. Select 7 breakfasts, 7 lunches, 7 dinners                     │
 │   4. For each meal: extract ingredients, prep time, recipe steps   │

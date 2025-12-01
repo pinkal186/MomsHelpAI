@@ -1,32 +1,29 @@
 # 🏠 MomsHelperAI - Intelligent Family Planning System
 
-> 🤖 **Capstone Project Track:** Concierge Agents  
 > 🧠 **Powered by:** Google Agent Development Kit (ADK) + Gemini 2.0 Flash  
-> ⚡ **Impact:** Saves 4+ hours per week on family planning tasks
+> ⚡ **Impact:** Saves hours per week on family planning tasks 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🎯 The Problem We're Solving
 
-**Indian families waste 14+ hours every week on repetitive planning tasks.**
+**Families waste 14+ hours every week on repetitive planning tasks.**
 
-Meet Priya, a working mother juggling career and family. Every Sunday, she faces the same exhausting routine:
+A busy parent juggling career and family. Every Sunday, they face the same exhausting routine:
 
-- ⏱️ **3-4 hours** planning 21 meals (breakfast, lunch, dinner × 7 days)
-- 🔍 **1-2 hours** searching recipes that match vegetarian diet + Indian cuisine preferences  
-- 📋 **1 hour** creating shopping lists and checking what's already in the pantry
-- 📅 **1 hour** scheduling meal prep around kids' soccer practice and art classes
+- ⏱️ planning 21 meals (breakfast, lunch, dinner × 7 days)
+- 🔍 Searching recipes that match family requirements 
+- 📋 Creating shopping lists and checking what's already in the pantry
+- 📅 Scheduling meal prep around kids' sports practice and extracurricular activities
 - 😰 **Mental exhaustion** from decision fatigue and avoiding meal repetition
 
-**Traditional meal planning apps?** They don't understand Indian cuisine nuances (dal-sabzi-roti combinations, regional variations, festival meals). They also require *manual orchestration*—Priya still has to connect the dots between recipes, pantry inventory, shopping lists, and family schedules.
 
 ### 💡 Our Solution: AI Agents That Work Like a Personal Assistant Team
 
 **MomsHelperAI** is a multi-agent system where specialized AI agents collaborate to automate the entire family planning workflow—from meal discovery to shopping list optimization.
 
 **Results:**
-- ✅ **30 minutes** to review and approve AI-generated weekly plan (vs. 3-4 hours manual work)
-- ✅ **4+ hours saved** every week (208 hours/year = 8.6 full days!)
+- ✅ Review and approve AI-generated customized weekly plan.
 - ✅ **20% cost savings** from reduced food waste (better pantry tracking)
 - ✅ **Zero decision fatigue**—AI handles the cognitive load
 
@@ -35,28 +32,28 @@ Meet Priya, a working mother juggling career and family. Every Sunday, she faces
 ## ✨ Key Features & Capabilities
 
 ### 🍛 Intelligent Meal Planning
-- Searches **Google for authentic Indian recipes** via dedicated Search Agent
-- Filters by **dietary restrictions** (vegetarian, vegan, Jain, gluten-free, nut allergies)
-- Respects **regional cuisine preferences** (North Indian, South Indian, Gujarati, Bengali)
+- Searches **Google for authentic recipes** via dedicated Search Agent
+- Filters by **dietary restrictions** (vegetarian, vegan, gluten-free, nut allergies, etc.)
+- Respects **regional cuisine preferences** (e.g., Mediterranean, Asian, American, Latin American)
 - **Avoids meal repetition** by checking past 4 weeks of meal history
 - Generates **structured JSON output** with meal plans + embedded grocery lists
 
 ### 📅 Smart Weekly Scheduling
 - Creates **time-slotted schedules** integrating meals + kids' activities
-- **Conflict detection**—won't schedule dinner prep during soccer practice
+- **Conflict detection**—won't schedule dinner prep during sports practice or music lessons
 - **Age-appropriate activity suggestions** from curated database
-- Adds **prep time buffers** for complex meals (biryanis, multi-course dinners)
+- Adds **prep time buffers** for complex meals (multi-course dinners, special occasions)
 
 ### 🛒 Optimized Grocery Planning
 - **Cross-references pantry inventory** to avoid buying duplicates
 - **Consolidates ingredients** across multiple recipes (5 meals need tomatoes → "2 kg tomatoes")
-- **Organizes by store sections** (Vegetables, Dairy, Grains, Spices)
+- **Organizes by store sections** (Produce, Dairy, Grains, Spices)
 - Tracks **pantry stock levels** for smart replenishment
 
 ### 🎉 Cultural Awareness
-- **Festival meal suggestions** (Diwali sweets, Holi snacks, Eid special dishes)
-- **Seasonal ingredient recommendations** (monsoon comfort foods, summer cooling meals)
-- **Regional celebration planning** (Pongal, Baisakhi, Onam feast preparations)
+- **Holiday meal suggestions** (Thanksgiving, Christmas, Lunar New Year, Eid, Passover, etc.)
+- **Seasonal ingredient recommendations** (summer salads, winter soups, spring vegetables)
+- **Regional celebration planning** (family birthdays, local festivals, community events)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -145,7 +142,7 @@ search_agent = genai.Agent(
     model="gemini-2.0-flash-exp",
     tools=[google_search],  # Cannot mix with FunctionTool
     system_instruction="""
-    You are a recipe search specialist for Indian cuisine.
+    You are a recipe search specialist for global cuisine.
     Search Google for authentic recipes matching dietary restrictions.
     Return recipe URLs with brief descriptions.
     """
@@ -302,7 +299,7 @@ CREATE TABLE schedules (
 ```python
 # agents/meal_planner.py
 meal_planning_prompt = """
-You are an expert Indian cuisine meal planner.
+You are an expert meal planner.
 
 CRITICAL: You MUST return ONLY valid JSON in this EXACT format (no markdown, no explanations):
 
@@ -310,25 +307,25 @@ CRITICAL: You MUST return ONLY valid JSON in this EXACT format (no markdown, no 
   "meal_plan": [
     {
       "day": "Monday",
-      "breakfast": {"meal_name": "Poha", "prep_time": 15},
-      "lunch": {"meal_name": "Dal Tadka with Rice", "prep_time": 30},
-      "dinner": {"meal_name": "Paneer Butter Masala", "prep_time": 35}
+      "breakfast": {"meal_name": "Oatmeal with fruit", "prep_time": 10},
+      "lunch": {"meal_name": "Grilled chicken salad", "prep_time": 20},
+      "dinner": {"meal_name": "Vegetable stir-fry with rice", "prep_time": 30}
     }
     // ... repeat for all 7 days
   ],
   "grocery_list": {
-    "vegetables": [
+    "produce": [
       {"item": "Tomatoes", "quantity": "2 kg"},
       {"item": "Onions", "quantity": "1.5 kg"}
     ],
     "dairy": [
       {"item": "Milk", "quantity": "2 L"},
-      {"item": "Paneer", "quantity": "500 g"}
+      {"item": "Cheese", "quantity": "500 g"}
     ],
     "spices": [...],
     "grains": [...]
   },
-  "summary": "7-day vegetarian North Indian meal plan for family of 4"
+  "summary": "7-day balanced meal plan for family of 4"
 }
 
 Rules:
@@ -508,6 +505,46 @@ MomsHelperAI/
 └── README.md                  # 📄 This file
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+### Explore API Endpoints app.py file used flask
+
+- `GET /health` - Health check
+- `POST /api/chat` - Main chat interface
+- `POST /api/meal-plan` - Plan meals
+- `POST /api/shopping-list` - Create shopping list
+- `POST /api/schedule` - Plan schedule
+
+
+## 🚀 Deployment (API Server)
+
+### Key Deployment Files
+- `Dockerfile` – Container build for production
+- `docker-compose.yml` – Multi-container orchestration (optional)
+- `DEPLOYMENT_GUIDE.md` – Full step-by-step deployment instructions
+- `.env.example` – Environment variable template
+
+### Quick API Deployment Overview
+1. **Install dependencies:**
+  ```bash
+  pip install -r requirements.txt
+  ```
+2. **Configure API key:**
+  - Copy `.env.example` to `.env` and add your `GOOGLE_API_KEY`.
+3. **Run the API server:**
+  ```bash
+  python app.py
+  ```
+  The API will be available at [http://localhost:5000](http://localhost:5000)
+4. **(Optional) Docker deployment:**
+  ```bash
+  docker build -t momshelper-ai .
+  docker run -d -p 5000:5000 --env-file .env momshelper-ai
+  ```
+
+For advanced options (Cloud Run, Vertex AI, etc.), see `DEPLOYMENT_GUIDE.md`.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ### Sequential Data Flow (Step-by-Step)
@@ -529,49 +566,49 @@ MomsHelperAI/
 │ STEP 2: Orchestrator → MEAL PLANNER AGENT                      │
 ├────────────────────────────────────────────────────────────────┤
 │ Input Data:                                                     │
-│   • family_id: "sharma_001"                                    │
-│   • dietary_restrictions: ["vegetarian"]                       │
-│   • cuisine_preferences: ["North Indian"]                      │
-│   • num_days: 7                                                │
-│   • past_meals: ["Tacos", "Pasta", "Stir-fry"] (to avoid)     │
+│   • family_id: "smith_001"                                      │
+│   • dietary_restrictions: ["vegetarian"]                        │
+│   • cuisine_preferences: ["Mediterranean"]                      │
+│   • num_days: 7                                                 │
+│   • past_meals: ["Tacos", "Pasta", "Stir-fry"] (to avoid)       │
 │                                                                │
-│ Agent Processing:                                              │
-│   ┌────────────────────────────────────────────────┐          │
-│   │ 1. Call SearchAgent (AgentTool)                │          │
-│   │    Query: "vegetarian North Indian recipes"    │          │
-│   │    ↓                                            │          │
-│   │    SearchAgent calls google_search             │          │
-│   │    Returns: 10 recipe URLs with descriptions   │          │
-│   │                                                 │          │
-│   │ 2. Call get_family_preferences (FunctionTool)  │          │
-│   │    SQLite Query: SELECT * FROM families        │          │
-│   │    Returns: {allergies: ["nuts"], members: 4}  │          │
-│   │                                                 │          │
-│   │ 3. LLM Processing (Gemini 2.5 Flash Lite)      │          │
-│   │    • Filters recipes by dietary restrictions   │          │
-│   │    • Selects 7 breakfasts, 7 lunches, 7 dinners│         │
-│   │    • Extracts ingredients for each meal        │          │
-│   │    • Consolidates ingredients into grocery_list│          │
-│   │    • Generates structured JSON output          │          │
-│   │                                                 │          │
-│   │ 4. Call save_meal_plan (FunctionTool)          │          │
-│   │    SQLite INSERT INTO weekly_plans             │          │
-│   └────────────────────────────────────────────────┘          │
+│ Agent Processing:                                               │
+│   ┌────────────────────────────────────────────────┐           │
+│   │ 1. Call SearchAgent (AgentTool)                │           │
+│   │    Query: "vegetarian Mediterranean recipes"   │           │
+│   │    ↓                                          │           │
+│   │    SearchAgent calls google_search             │           │
+│   │    Returns: 10 recipe URLs with descriptions   │           │
+│   │                                               │           │
+│   │ 2. Call get_family_preferences (FunctionTool)  │           │
+│   │    SQLite Query: SELECT * FROM families        │           │
+│   │    Returns: {allergies: ["nuts"], members: 4}  │           │
+│   │                                               │           │
+│   │ 3. LLM Processing (Gemini 2.5 Flash Lite)      │           │
+│   │    • Filters recipes by dietary restrictions   │           │
+│   │    • Selects 7 breakfasts, 7 lunches, 7 dinners│           │
+│   │    • Extracts ingredients for each meal        │           │
+│   │    • Consolidates ingredients into grocery_list│           │
+│   │    • Generates structured JSON output          │           │
+│   │                                               │           │
+│   │ 4. Call save_meal_plan (FunctionTool)          │           │
+│   │    SQLite INSERT INTO weekly_plans             │           │
+│   └────────────────────────────────────────────────┘           │
 │                                                                │
 │ Output JSON:                                                   │
 │   {                                                            │
 │     "meal_plan": [                                             │
 │       {                                                        │
 │         "day": "Monday",                                       │
-│         "breakfast": {"meal_name": "Poha", "prep_time": 15},  │
-│         "lunch": {"meal_name": "Dal Rice", "prep_time": 30},  │
-│         "dinner": {"meal_name": "Paneer Masala", "prep_time": 35}│
+│         "breakfast": {"meal_name": "Oatmeal", "prep_time": 10},│
+│         "lunch": {"meal_name": "Grilled veggie wrap", "prep_time": 20},│
+│         "dinner": {"meal_name": "Stir-fried tofu", "prep_time": 25}│
 │       },                                                       │
 │       // ... (Tuesday-Sunday)                                  │
 │     ],                                                         │
 │     "grocery_list": {                                          │
-│       "vegetables": [{"item": "Tomatoes", "quantity": "2 kg"}],│
-│       "dairy": [{"item": "Milk", "quantity": "2 L"}],         │
+│       "produce": [{"item": "Tomatoes", "quantity": "2 kg"}],   │
+│       "dairy": [{"item": "Milk", "quantity": "2 L"}],          │
 │       "spices": [...],                                         │
 │       "grains": [...]                                          │
 │     },                                                         │
@@ -585,7 +622,7 @@ MomsHelperAI/
 ├────────────────────────────────────────────────────────────────┤
 │ Input Data (extracted from Step 2):                            │
 │   • meal_plan: [Monday: {...}, Tuesday: {...}, ...]           │
-│   • family_id: "sharma_001"                                    │
+│   • family_id: "smith_001"                                      │
 │   • week_start_date: "2025-12-02"                              │
 │                                                                │
 │ Agent Processing:                                              │
@@ -611,11 +648,11 @@ MomsHelperAI/
 │   {                                                            │
 │     "weekly_schedule": {                                       │
 │       "Monday": [                                              │
-│         {"time": "08:00", "activity": "Breakfast - Poha"},    │
-│         {"time": "12:00", "activity": "Lunch - Dal Rice"},    │
+│         {"time": "08:00", "activity": "Breakfast - Oatmeal"},    │
+│         {"time": "12:00", "activity": "Lunch - Grilled veggie wrap"},    │
 │         {"time": "16:00", "activity": "Kids - Soccer Practice"},│
 │         {"time": "18:30", "activity": "Dinner prep starts"},  │
-│         {"time": "20:00", "activity": "Dinner - Paneer Masala"}│
+│         {"time": "20:00", "activity": "Dinner - Stir-fried tofu"}│
 │       ],                                                       │
 │       // ... (Tuesday-Sunday)                                  │
 │     },                                                         │
@@ -635,7 +672,7 @@ MomsHelperAI/
 │ Input Data (extracted from Step 2):                            │
 │   • grocery_list: {vegetables: [...], dairy: [...]}           │
 │   • pantry_stock: {rice: "2 cups", pasta: "500g"}             │
-│   • family_id: "sharma_001"                                    │
+│   • family_id: "smith_001"                                      │
 │                                                                │
 │ Agent Processing:                                              │
 │   ┌────────────────────────────────────────────────┐          │
@@ -655,10 +692,10 @@ MomsHelperAI/
 │   │                                                 │          │
 │   │ 3. Call organize_by_sections (FunctionTool)    │          │
 │   │    Groups items by store layout:               │          │
-│   │      • Vegetables (produce section)            │          │
-│   │      • Dairy (refrigerated section)            │          │
-│   │      • Grains (dry goods aisle)                │          │
-│   │      • Spices (condiments aisle)               │          │
+│   │      • Produce (fruits & vegetables)           │          │
+│   │      • Dairy (milk, cheese, yogurt)            │          │
+│   │      • Grains (bread, rice, pasta)             │          │
+│   │      • Spices (herbs, condiments)              │          │
 │   └────────────────────────────────────────────────┘          │
 │                                                                │
 │ Output JSON:                                                   │
@@ -746,28 +783,28 @@ USER: "Plan meals for this week"
 
 [00:00.000] Orchestrator.handle_request()
             Input: user_request="Plan meals for this week"
-                   family_id="sharma_001"
+                   family_id="smith_001"
 
-[00:00.050] 🛢️ DB READ #1: SQLite.get_family("sharma_001")
-            Query: SELECT * FROM families WHERE family_id='sharma_001'
+[00:00.050] 🛢️ DB READ #1: SQLite.get_family("smith_001")
+            Query: SELECT * FROM families WHERE family_id='smith_001'
             Returns: {
-              family_id: "sharma_001",
-              members: ["Rajesh", "Priya", "Aarav (8)", "Ananya (5)"],
+              family_id: "smith_001",
+              members: ["Alex", "Jamie", "Taylor (8)", "Morgan (5)"],
               dietary_restrictions: ["vegetarian"],
-              cuisine_preferences: ["North Indian"]
+              cuisine_preferences: ["Mediterranean"]
             }
 
-[00:00.100] 🛢️ DB READ #2: SQLite.get_pantry("sharma_001")
-            Query: SELECT * FROM pantry WHERE family_id='sharma_001'
+[00:00.100] 🛢️ DB READ #2: SQLite.get_pantry("smith_001")
+            Query: SELECT * FROM pantry WHERE family_id='smith_001'
             Returns: {
               "rice": "2 cups",
               "pasta": "500g",
               "olive oil": "1 bottle"
             }
 
-[00:00.150] 🛢️ DB READ #3: SQLite.get_past_meal_plans("sharma_001", weeks=4)
+[00:00.150] 🛢️ DB READ #3: SQLite.get_past_meal_plans("smith_001", weeks=4)
             Query: SELECT meal_plan FROM weekly_plans
-                   WHERE family_id='sharma_001'
+                   WHERE family_id='smith_001'
                    AND created_at > '2025-11-03'
             Returns: ["Tacos", "Pasta", "Stir-fry", "Pizza", ...]
 
@@ -777,28 +814,28 @@ USER: "Plan meals for this week"
 
 [00:00.250] 🤖 AGENT CALL #1: MealPlannerAgent.plan_meals()
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               num_days: 7,
               dietary_restrictions: ["vegetarian"],
-              preferences: {"cuisine": ["North Indian"]}
+              preferences: {"cuisine": ["Mediterranean"]}
             }
 
 [00:01.000] ⚙️ TOOL CALL #1: SearchAgent (AgentTool)
-            Query: "vegetarian North Indian breakfast recipes"
+            Query: "vegetarian Mediterranean breakfast recipes"
             
             [Nested Agent Execution]
             [00:01.050] 🔍 TOOL CALL #1a: google_search
-                        Query: "vegetarian North Indian breakfast recipes"
+                        Query: "vegetarian Mediterranean breakfast recipes"
                         Returns: [
-                          {url: "...", title: "Poha Recipe"},
-                          {url: "...", title: "Idli Recipe"},
-                          {url: "...", title: "Upma Recipe"}
+                          {url: "...", title: "Oatmeal Recipe"},
+                          {url: "...", title: "Greek Salad Recipe"},
+                          {url: "...", title: "Falafel Wrap Recipe"}
                         ]
 
 [00:02.500] ⚙️ TOOL CALL #2: get_family_preferences (FunctionTool)
-            Input: family_id="sharma_001"
+            Input: family_id="smith_001"
             
-            [00:02.550] 🛢️ DB READ #4: SQLite.get_family("sharma_001")
+            [00:02.550] 🛢️ DB READ #4: SQLite.get_family("smith_001")
                         Returns: Same as DB READ #1 (cached)
 
 [00:03.000] 🧠 LLM PROCESSING (Gemini 2.5 Flash Lite)
@@ -810,14 +847,14 @@ USER: "Plan meals for this week"
 
 [00:04.500] ⚙️ TOOL CALL #3: save_meal_plan (FunctionTool)
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               meal_plan: {meal_plan: [...], grocery_list: {...}}
             }
             
             [00:04.550] 🛢️ DB WRITE #1: SQLite.save_weekly_plan()
                         INSERT INTO weekly_plans
                         (plan_id, family_id, meal_plan, grocery_list, created_at)
-                        VALUES ('plan_abc123', 'sharma_001', ...)
+                        VALUES ('plan_def456', 'smith_001', ...)
 
 [00:04.600] ✅ MealPlannerAgent COMPLETE
             Output: {
@@ -832,14 +869,14 @@ USER: "Plan meals for this week"
 
 [00:04.750] 🤖 AGENT CALL #2: WeekPlannerAgent.plan_week()
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               meal_plan_data: <extracted from MealPlanner>,
               week_start_date: "2025-12-02"
             }
 
 [00:05.000] ⚙️ TOOL CALL #4: get_activity_suggestions (FunctionTool)
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               kids_ages: [5, 8]
             }
             
@@ -866,15 +903,15 @@ USER: "Plan meals for this week"
             
             [00:07.050] 🛢️ DB WRITE #2: INSERT INTO schedules
                         (schedule_id, family_id, date, time, activity)
-                        VALUES ('sched_001', 'sharma_001', '2025-12-02', '08:00', 'Breakfast - Poha')
+                        VALUES ('sched_001', 'smith_001', '2025-12-02', '08:00', 'Breakfast - Oatmeal')
             
             [00:07.100] 🛢️ DB WRITE #3: INSERT INTO schedules
-                        VALUES ('sched_002', 'sharma_001', '2025-12-02', '12:00', 'Lunch - Dal Rice')
+                        VALUES ('sched_002', 'smith_001', '2025-12-02', '12:00', 'Lunch - Grilled veggie wrap')
             
             ... (26 more INSERT operations) ...
             
             [00:08.400] 🛢️ DB WRITE #29: INSERT INTO schedules
-                        VALUES ('sched_028', 'sharma_001', '2025-12-08', '20:00', 'Dinner - ...')
+                        VALUES ('sched_028', 'smith_001', '2025-12-08', '20:00', 'Dinner - ...')
 
 [00:08.500] ✅ WeekPlannerAgent COMPLETE
             Output: {
@@ -888,19 +925,19 @@ USER: "Plan meals for this week"
 
 [00:08.650] 🤖 AGENT CALL #3: GroceryPlannerAgent.create_shopping_list()
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               grocery_list_data: <extracted from MealPlanner>,
               pantry_stock: {rice: "2 cups", pasta: "500g"}
             }
 
 [00:09.000] ⚙️ TOOL CALL #33: check_pantry_inventory (FunctionTool)
             Input: {
-              family_id: "sharma_001",
+              family_id: "smith_001",
               ingredients: ["tomatoes", "onions", "rice", "milk", "paneer"]
             }
             
-            [00:09.050] 🛢️ DB READ #5: SQLite.get_pantry("sharma_001")
-                        Query: SELECT * FROM pantry WHERE family_id='sharma_001'
+            [00:09.050] 🛢️ DB READ #5: SQLite.get_pantry("smith_001")
+                        Query: SELECT * FROM pantry WHERE family_id='smith_001'
                         Returns: {rice: "2 cups", pasta: "500g", olive_oil: "1 bottle"}
             
             Logic:
@@ -961,7 +998,7 @@ USER: "Plan meals for this week"
 [00:11.000] ✅ ORCHESTRATOR COMPLETE
             Returns to user:
             "📅 Your Weekly Plan:
-             🍽️ Meals: Poha, Dal Rice, Paneer Masala...
+             🍽️ Meals: Oatmeal, Grilled veggie wrap, Stir-fried tofu...
              ⚽ Activities: Soccer Mon 4pm, Art Fri 3pm
              🛒 Shopping: 24 items
              
@@ -1120,13 +1157,13 @@ Session ID: abc123...
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Loading sample family data...
-✅ Sample family 'Sharma' loaded (ID: sharma_001)
-👨‍👩‍👧‍👦 Members: 4 (Rajesh, Priya, Aarav, Ananya)
+✅ Sample family 'Smith' loaded (ID: smith_001)
+👨‍👩‍👧‍👦 Members: 4 (Alex, Jamie, Taylor, Morgan)
 🥗 Dietary: Vegetarian
 
 You: Plan meals for this week
 
-⏳ Processing request for sharma_001...
+⏳ Processing request for smith_001...
 This may take a moment as AI agents work together...
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1136,30 +1173,29 @@ This may take a moment as AI agents work together...
 🍽️ WEEKLY MEAL PLAN (7 Days)
 
 Day 1 - Monday:
-  🌅 Breakfast: Poha with peanuts and curry leaves
-  🌞 Lunch: Dal tadka, jeera rice, mixed vegetable sabzi
-  🌙 Dinner: Paneer butter masala, roti, cucumber raita
+  🌅 Breakfast: Oatmeal with berries
+  🌞 Lunch: Grilled veggie wrap
+  🌙 Dinner: Stir-fried tofu with rice
 
 Day 2 - Tuesday:
-  🌅 Breakfast: Idli with sambhar and coconut chutney
-  🌞 Lunch: Rajma curry, steamed rice, cabbage stir-fry
-  🌙 Dinner: Aloo paratha with curd and pickle
+  🌅 Breakfast: Scrambled eggs with toast
+  🌞 Lunch: Chickpea salad
+  🌙 Dinner: Pasta primavera
 
 ... (continues for 7 days)
 
 🛒 GROCERY SHOPPING LIST
 
-🥬 Vegetables:
+🥬 Produce:
   ✓ Tomatoes: 2 kg
   ✓ Onions: 1.5 kg
-  ✓ Potatoes: 2 kg
-  ✓ Cauliflower: 1 head
+  ✓ Bell peppers: 1 kg
   ✓ Spinach: 500g
 
 🥛 Dairy:
   ✓ Milk: 3 liters
-  ✓ Paneer: 500g
-  ✓ Curd: 1 kg
+  ✓ Cheese: 500g
+  ✓ Yogurt: 1 kg
 
 ... (complete categorized list)
 
@@ -1176,13 +1212,13 @@ Is this plan acceptable? (yes/no/modify):
     "meal_plan": [
       {
         "day": "Monday",
-        "breakfast": "Poha with peanuts",
-        "lunch": "Dal tadka with rice",
-        "dinner": "Paneer butter masala with roti"
+        "breakfast": "Oatmeal with berries",
+        "lunch": "Grilled veggie wrap",
+        "dinner": "Stir-fried tofu with rice"
       }
     ],
     "grocery_list": {
-      "vegetables": [
+      "produce": [
         {"item": "Tomatoes", "quantity": "2 kg"},
         {"item": "Onions", "quantity": "1.5 kg"}
       ],
@@ -1197,7 +1233,7 @@ Is this plan acceptable? (yes/no/modify):
       {
         "date": "2025-12-01",
         "activities": [
-          {"time": "08:00", "activity": "Breakfast - Poha"},
+          {"time": "08:00", "activity": "Breakfast - Oatmeal"},
           {"time": "10:00", "activity": "Kids - School"},
           {"time": "16:00", "activity": "Kids - Homework time"},
           {"time": "20:00", "activity": "Family - Dinner together"}
@@ -1207,7 +1243,7 @@ Is this plan acceptable? (yes/no/modify):
   },
   "shopping_list": {
     "total_items": 24,
-    "categories": ["vegetables", "dairy", "spices", "grains"],
+    "categories": ["produce", "dairy", "spices", "grains"],
     "organized_list": {}
   },
   "agents_executed": ["MealPlanner", "WeekPlanner", "GroceryPlanner"],
@@ -1290,7 +1326,7 @@ quit/exit               # Exit application
 **Natural language examples:**
 ```
 💬 "Plan meals for this week"
-💬 "Create shopping list for Diwali party"
+💬 "Create shopping list for a birthday party"
 💬 "Schedule weekend activities"
 💬 "Find vegetarian breakfast recipes"
 ```
@@ -1304,27 +1340,13 @@ Content-Type: application/json
 
 {
   "message": "Plan dinner for tonight",
-  "family_id": "sharma_001"
+  "family_id": "smith_001"
 }
 ```
 
 **🏥 Health check**
 ```bash
 GET /health
-```
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-## 🧪 Testing
-
-Run comprehensive tests:
-```bash
-# All tests
-python -m pytest test/
-
-# Specific tests
-python test/test_meal_planner.py
-python test/test_orchestrator_comprehensive.py
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1351,14 +1373,13 @@ python test/test_orchestrator_comprehensive.py
 - **👥 Multi-Family Sharing**: Share recipes and meal plans with friends and extended family
 - **📊 Nutrition Analytics**: Track nutritional values and health goals
 - **🎯 Meal Preferences Learning**: AI learns family preferences over time for better suggestions
-- **🌍 Regional Cuisine Expansion**: Add more regional Indian cuisines (Bengali, Gujarati, Kerala, etc.)
-- **🎉 Festival Special Plans**: Pre-made plans for Diwali, Holi, Eid, Christmas celebrations
+- **🌍 Regional Cuisine Expansion**: Add more global cuisines (Mediterranean, Asian, Latin American, etc.)
+- **🎉 Holiday Special Plans**: Pre-made plans for Christmas, Thanksgiving, Lunar New Year, Eid, and more
 - **🏋️ Fitness Integration**: Sync with fitness apps for calorie-aware meal planning
 - **🗣️ Voice Assistant**: Integration with Google Assistant, Alexa for hands-free planning
 - **📱 Mobile App**: Native iOS and Android apps with push notifications
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 
 ## 📄 License
 

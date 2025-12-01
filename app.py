@@ -4,7 +4,6 @@ REST API wrapping Google ADK agents with session management
 """
 
 from flask import Flask, request, jsonify, session
-from flask_cors import CORS
 from datetime import datetime
 import uuid
 import asyncio
@@ -12,7 +11,6 @@ from functools import wraps
 
 from agents.orchestrator import orchestrator
 from storage.sqlite_storage import SQLiteStorage
-from storage.chroma_storage import ChromaStorage
 from utils.config import Config
 from utils.logger import setup_logger
 
@@ -20,12 +18,13 @@ logger = setup_logger(__name__)
 
 # Create Flask app
 app = Flask(__name__)
-app.secret_key = Config.GOOGLE_API_KEY[:32]  # Use first 32 chars of API key
-CORS(app)
+if Config.GOOGLE_API_KEY:
+    app.secret_key = Config.GOOGLE_API_KEY[:32]  # Use first 32 chars of API key
+else:
+    app.secret_key = 'dev-secret-key-change-in-production'
 
 # Initialize storage
 storage = SQLiteStorage()
-chroma = ChromaStorage()
 
 
 def async_route(f):
@@ -51,7 +50,16 @@ def health_check():
 def get_families():
     """Get all families in database."""
     try:
-        families = storage.get_all_families()
+        # Simplified: return empty list or sample data
+        families = []
+        # Try to get sample family if exists
+        try:
+            sample_family = storage.get_family('sharma_001')
+            if sample_family:
+                families.append(sample_family)
+        except:
+            pass
+        
         return jsonify({
             'success': True,
             'families': families,
@@ -153,11 +161,19 @@ async def chat():
         
         logger.info(f"Chat request from family {family_id}: {user_message[:100]}")
         
-        # Call orchestrator
+        # Get family profile for dietary restrictions
+        family_profile = storage.get_family(family_id)
+        dietary_restrictions = family_profile.get('dietary_restrictions', []) if family_profile else []
+        preferred_cuisines = family_profile.get('preferred_cuisines', []) if family_profile else []
+        
+        # Call orchestrator with proper parameters
         response = await orchestrator.handle_request(
             user_request=user_message,
             family_id=family_id,
-            session_id=session_id
+            num_days=7,
+            dietary_restrictions=dietary_restrictions,
+            preferences={"cuisine": preferred_cuisines},
+            week_start_date=datetime.now().strftime('%Y-%m-%d')
         )
         
         # Extract response text
@@ -212,6 +228,11 @@ async def plan_meals():
         days = data.get('days', 7)
         preferences = data.get('preferences', '')
         
+        # Get family profile for dietary restrictions
+        family_profile = storage.get_family(family_id)
+        dietary_restrictions = family_profile.get('dietary_restrictions', []) if family_profile else []
+        preferred_cuisines = family_profile.get('preferred_cuisines', []) if family_profile else []
+        
         # Create request for orchestrator
         if days == 1:
             message = f"Plan meals for {start_date}. {preferences}"
@@ -220,7 +241,11 @@ async def plan_meals():
         
         response = await orchestrator.handle_request(
             user_request=message,
-            family_id=family_id
+            family_id=family_id,
+            num_days=days,
+            dietary_restrictions=dietary_restrictions,
+            preferences={"cuisine": preferred_cuisines, "quick_meals": "quick" in preferences.lower()},
+            week_start_date=start_date
         )
         
         # Extract response
@@ -270,6 +295,11 @@ async def create_shopping_list():
         family_id = data['family_id']
         recipes = data.get('recipes', [])
         
+        # Get family profile
+        family_profile = storage.get_family(family_id)
+        dietary_restrictions = family_profile.get('dietary_restrictions', []) if family_profile else []
+        preferred_cuisines = family_profile.get('preferred_cuisines', []) if family_profile else []
+        
         if recipes:
             recipes_text = ", ".join(recipes)
             message = f"Create shopping list for these recipes: {recipes_text}"
@@ -278,7 +308,11 @@ async def create_shopping_list():
         
         response = await orchestrator.handle_request(
             user_request=message,
-            family_id=family_id
+            family_id=family_id,
+            num_days=7,
+            dietary_restrictions=dietary_restrictions,
+            preferences={"cuisine": preferred_cuisines},
+            week_start_date=datetime.now().strftime('%Y-%m-%d')
         )
         
         # Extract response
@@ -328,13 +362,22 @@ async def plan_schedule():
         start_date = data.get('start_date', datetime.now().strftime('%Y-%m-%d'))
         special_events = data.get('special_events', [])
         
+        # Get family profile
+        family_profile = storage.get_family(family_id)
+        dietary_restrictions = family_profile.get('dietary_restrictions', []) if family_profile else []
+        preferred_cuisines = family_profile.get('preferred_cuisines', []) if family_profile else []
+        
         # Create request
         events_text = ", ".join(special_events) if special_events else "none"
         message = f"Plan weekly schedule starting {start_date}. Special events: {events_text}"
         
         response = await orchestrator.handle_request(
             user_request=message,
-            family_id=family_id
+            family_id=family_id,
+            num_days=7,
+            dietary_restrictions=dietary_restrictions,
+            preferences={"cuisine": preferred_cuisines},
+            week_start_date=start_date
         )
         
         # Extract response
@@ -379,15 +422,26 @@ async def search_recipes():
         dietary = data.get('dietary', '')
         query = data.get('query', '')
         
-        # Create search request
-        message = f"Find {meal_type} recipes that are {dietary} {query}"
-        
         # Use default family or create temporary context
         family_id = data.get('family_id', 'sharma_001')
         
+        # Get family profile
+        family_profile = storage.get_family(family_id)
+        dietary_restrictions = family_profile.get('dietary_restrictions', []) if family_profile else []
+        if dietary:
+            dietary_restrictions.append(dietary)
+        preferred_cuisines = family_profile.get('preferred_cuisines', []) if family_profile else []
+        
+        # Create search request
+        message = f"Find {meal_type} recipes that are {dietary} {query}"
+        
         response = await orchestrator.handle_request(
             user_request=message,
-            family_id=family_id
+            family_id=family_id,
+            num_days=7,
+            dietary_restrictions=dietary_restrictions,
+            preferences={"cuisine": preferred_cuisines},
+            week_start_date=datetime.now().strftime('%Y-%m-%d')
         )
         
         # Extract response
@@ -433,7 +487,17 @@ def internal_error(error):
 
 if __name__ == '__main__':
     logger.info("Starting MomsHelperAI Flask API server...")
-    logger.info(f"API Key configured: {Config.GOOGLE_API_KEY[:10]}...")
+    
+    # Check if API key is configured
+    if not Config.GOOGLE_API_KEY:
+        print("\n" + "="*70)
+        print("WARNING: GOOGLE_API_KEY not configured!")
+        print("="*70)
+        print("Please set GOOGLE_API_KEY in .env file")
+        print("Get your API key from: https://makersuite.google.com/app/apikey")
+        print("="*70 + "\n")
+    else:
+        logger.info(f"API Key configured: {Config.GOOGLE_API_KEY[:10]}...")
     
     print("\n" + "="*70)
     print("MOMSHELPERAI - Flask REST API")
@@ -454,8 +518,13 @@ if __name__ == '__main__':
     print("Press CTRL+C to stop\n")
     
     # Run Flask app
-    app.run(
-        host='0.0.0.0',
-        port=5000,
-        debug=Config.DEBUG
-    )
+    try:
+        app.run(
+            host='0.0.0.0',
+            port=5000,
+            debug=False  # Use False by default for stability
+        )
+    except Exception as e:
+        logger.error(f"Failed to start server: {e}")
+        print(f"\nError starting server: {e}")
+        print("Make sure port 5000 is not already in use.\n")

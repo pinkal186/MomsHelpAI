@@ -56,7 +56,7 @@ class MealPlannerAgent(BaseAgent):
     """Meal planning agent using google_search + RecipeRefiner sub-agent (ADK pattern)."""
     
     def __init__(self):
-        instruction = """You plan Indian family meals using SearchAgent for web recipes.
+        instruction = """You plan family meals using SearchAgent for web recipes.
 
 You MUST ALWAYS follow these steps:
 1) Get the family's preferences using the 'get_family_preferences' tool.
@@ -89,9 +89,10 @@ CRITICAL: Return ONLY valid JSON in this EXACT format:
     "dairy": [...],
     "other": [...]
   },
-  "summary": "7-day vegetarian meal plan with quick breakfasts, simple lunches, heavy dinners"
+  "summary": "7-day meal plan with quick breakfasts, simple lunches, heavy dinners"
 }
-
+change summery as per user request, like if user ask for dinner today only then add summery for dinner only.
+reate whole json just empty value if not generated data for that key.
 Return ONLY the JSON - no extra text before or after!"""
         
         tools = [
@@ -120,12 +121,12 @@ Return ONLY the JSON - no extra text before or after!"""
             preferences: Dict like {"cuisine": ["Italian"], "kid_friendly": true}
         """
         restrictions_str = ", ".join(dietary_restrictions) if dietary_restrictions else "none"
-        prefs_str = str(preferences) if preferences else "Indian cuisine"
+        prefs_str = str(preferences) if preferences else "regional cuisine"
         
         query = f"""Plan meals for family {family_id}.
 
 User request: {request}
-Days: {num_days}
+Days: {num_days} ,but change days and output only what ask in request, like dinner today, then add answer for dinner one day per other requirement
 Dietary restrictions: {restrictions_str}
 Preferences: {prefs_str}
 
