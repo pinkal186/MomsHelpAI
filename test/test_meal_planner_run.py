@@ -8,6 +8,60 @@ from agents.meal_planner import meal_planner_agent
 from storage.sqlite_storage import SQLiteStorage
 
 
+def check_saved_meal_plan(family_id="sharma_001"):
+    """Check what was saved to database."""
+    try:
+        storage = SQLiteStorage()
+        conn = storage._get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT plan_id, meal_plan, created_at 
+            FROM weekly_plans 
+            WHERE family_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        ''', (family_id,))
+        
+        row = cursor.fetchone()
+        conn.close()
+        
+        if row:
+            plan_id, meal_plan_json, created_at = row
+            print(f"\nSaved Plan ID: {plan_id}")
+            print(f"Created: {created_at}")
+            
+            if meal_plan_json:
+                import json
+                meal_plan = json.loads(meal_plan_json)
+                print(f"\nStored Meal Plan:")
+                
+                meals_found = 0
+                for day, meals in meal_plan.items():
+                    if isinstance(meals, dict):
+                        for meal_type, meal_data in meals.items():
+                            if meal_data and meal_data.get('meal_name'):
+                                meals_found += 1
+                                name = meal_data['meal_name']
+                                time = f" ({meal_data['prep_time_minutes']}m)" if meal_data.get('prep_time_minutes') else ""
+                                print(f"  {day} {meal_type}: {name}{time}")
+                
+                if meals_found == 0:
+                    print("  No meals found in stored data")
+                else:
+                    print(f"\nTotal meals stored: {meals_found}")
+                    return True
+            else:
+                print("No meal plan data saved")
+                return False
+        else:
+            print("No meal plan found in database")
+            return False
+    except Exception as e:
+        print(f"Database error: {e}")
+        return False
+
+
 async def test_meal_planner():
     """Test meal planner with the specified request."""
     
@@ -33,60 +87,32 @@ async def test_meal_planner():
     
     try:
         storage.create_family(sharma_family)
-        print("Sharma family data loaded\n")
+        print("Sharma family data loaded")
     except:
-        print("Sharma family already exists\n")
+        print("Sharma family already exists")
     
     # Test the meal planner
-    print("📝 Request: Suggest easy and fast recepi for monday and tuesday,")
-    print("           keep break on wednesday, thursday if not activity and")
-    print("           have time then heavy meal.\n")
-    print("Calling MealPlanner Agent...\n")
+    print("\nRequest: Easy meals for Monday and Tuesday")
+    print("Calling MealPlanner Agent...")
     
     try:
         response = await meal_planner_agent.plan_meals(
             family_id="sharma_001",
-            request="Suggest easy and fast recepi for monday and tuesday, keep break on wednesday, thursday if not activity and have time then heavy meal.",
-            num_days=7
+            request="Plan easy and quick meals for Monday and Tuesday - breakfast, lunch and dinner"
         )
         
-        print("=" * 70)
-        print("AGENT RESPONSE:")
-        print("=" * 70)
+        print(f"\nAgent completed with {len(response)} events")
         
-        # Extract the final text response from events
-        if isinstance(response, list):
-            # Find the last event with text content
-            for event in reversed(response):
-                if hasattr(event, 'content') and event.content and hasattr(event.content, 'parts'):
-                    for part in event.content.parts:
-                        if hasattr(part, 'text') and part.text:
-                            print(part.text)
-                            break
-                    else:
-                        continue
-                    break
-            else:
-                print("No text response found in events")
-                print(f"\nLast event: {response[-1] if response else 'No events'}")
-        elif hasattr(response, 'text'):
-            print(response.text)
+        # Check what was saved to database
+        if check_saved_meal_plan():
+            print("\n✅ SUCCESS: Meal plan generated and saved correctly!")
         else:
-            print(response)
-        
-        print("\n" + "=" * 70)
-        print("Test completed successfully!")
-        print("=" * 70)
+            print("\n❌ ISSUE: No proper meal plan was saved")
         
     except Exception as e:
-        print("=" * 70)
-        print("ERROR:")
-        print("=" * 70)
-        print(f"Error type: {type(e).__name__}")
-        print(f"Error message: {str(e)}")
-        import traceback
-        print("\nFull traceback:")
-        traceback.print_exc()
+        print(f"\n❌ ERROR: {e}")
+        if "quota" in str(e).lower():
+            print("Rate limit exceeded - wait and try again")
 
 
 if __name__ == "__main__":
