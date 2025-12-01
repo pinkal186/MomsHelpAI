@@ -1,6 +1,6 @@
 """Orchestrator Agent - Sequential coordinator using Google ADK pattern."""
 
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, Callable
 from datetime import datetime
 from agents.meal_planner import meal_planner_agent
 from agents.week_planner import week_planner_agent
@@ -34,7 +34,8 @@ class OrchestratorAgent:
         num_days: int = 7,
         dietary_restrictions: list = None,
         preferences: dict = None,
-        week_start_date: str = None
+        week_start_date: str = None,
+        approval_callback: Optional[Callable[[str, Dict], bool]] = None
     ) -> Dict[str, Any]:
         """Orchestrate complete weekly planning workflow.
         
@@ -45,6 +46,9 @@ class OrchestratorAgent:
             dietary_restrictions: ["vegetarian", "no_seafood"]
             preferences: {"cuisine": ["Indian"], "quick_meals": true}
             week_start_date: "2025-12-02" (optional)
+            approval_callback: Optional function(agent_name, output) -> bool
+                              If provided, pauses after MealPlanner for human approval.
+                              Return True to continue, False to stop.
         
         Output (per architecture):
         {
@@ -53,6 +57,13 @@ class OrchestratorAgent:
             "shopping_list": {...},
             "agents_executed": ["MealPlanner", "WeekPlanner", "GroceryPlanner"],
             "execution_summary": "Planned 7 days with 21 meals, 5 activities, 24 grocery items"
+        }
+        
+        With approval_callback, returns after MealPlanner if not approved:
+        {
+            "meal_plan": {...},
+            "status": "awaiting_approval" or "rejected",
+            "agents_executed": ["MealPlanner"]
         }
         """
         logger.info(f"Orchestrating request: {user_request[:80]}...")
@@ -69,7 +80,7 @@ class OrchestratorAgent:
         }
         
         try:
-            # STEP 1: Meal Planning
+            # STEP 1: Meal Planning (wait for completion)
             logger.info("Step 1: Calling MealPlannerAgent...")
             meal_response = await meal_planner_agent.plan_meals(
                 family_id=family_id,
@@ -80,7 +91,35 @@ class OrchestratorAgent:
             )
             result["agents_executed"].append("MealPlanner")
             result["meal_plan"] = self._extract_meal_plan(meal_response)
-            logger.info(f"✓ MealPlanner completed")
+            
+            # Validate meal plan extraction - fallback to storage if needed
+            if result["meal_plan"].get("status") == "no_meal_plan_extracted":
+                logger.warning("MealPlanner did not save plan, trying latest from storage...")
+                try:
+                    latest_plan = self._get_latest_family_plan(family_id)
+                    if latest_plan and latest_plan.get('meal_plan'):
+                        result["meal_plan"] = latest_plan
+                        logger.info("✓ Retrieved meal plan from storage as fallback")
+                    else:
+                        logger.warning("No fallback meal plan available")
+                except Exception as e:
+                    logger.error(f"Failed to retrieve fallback plan: {e}")
+            else:
+                meals_count = len(result['meal_plan'].get('meal_plan', []))
+                logger.info(f"✓ MealPlanner completed with meal plan containing {meals_count} days")
+            
+            # HUMAN-IN-THE-LOOP: Check if approval is required
+            if approval_callback is not None:
+                logger.info("Requesting human approval for meal plan...")
+                approved = approval_callback("MealPlanner", result["meal_plan"])
+                
+                if not approved:
+                    logger.info("Meal plan rejected by human. Stopping workflow.")
+                    result["status"] = "rejected"
+                    result["execution_summary"] = "Meal plan generated but rejected by user"
+                    return result
+                
+                logger.info("Meal plan approved by human. Continuing workflow...")
             
             # STEP 2: Week Planning (uses meal_plan output)
             logger.info("Step 2: Calling WeekPlannerAgent...")
@@ -121,31 +160,92 @@ class OrchestratorAgent:
             return result
     
     def _extract_meal_plan(self, response) -> Dict:
-        """Extract meal plan JSON from agent response."""
+        """Extract meal plan JSON from agent response or retrieve from storage."""
+        saved_plan = None
+        plan_id = None
+        
         if isinstance(response, list):
-            # Extract from events
-            for event in reversed(response):
+            # Look for save_meal_plan function call first (most reliable)
+            for event in response:
                 if hasattr(event, 'content') and event.content:
-                    if hasattr(event, 'parts') and event.content.parts:
+                    if hasattr(event.content, 'parts') and event.content.parts:
+                        for part in event.content.parts:
+                            if hasattr(part, 'function_call') and part.function_call:
+                                if part.function_call.name == 'save_meal_plan':
+                                    # Extract meal_data from function call args
+                                    args = part.function_call.args
+                                    if hasattr(args, 'meal_data') and args.meal_data:
+                                        try:
+                                            # Try to parse if it's a string
+                                            if isinstance(args.meal_data, str):
+                                                saved_plan = json.loads(args.meal_data)
+                                            else:
+                                                saved_plan = args.meal_data
+                                            logger.info(f"Successfully extracted meal plan from save_meal_plan call")
+                                            break
+                                        except (json.JSONDecodeError, AttributeError) as e:
+                                            logger.warning(f"Failed to parse meal_data: {e}")
+                                            continue
+                            
+                            # Look for save response with plan_id
+                            elif hasattr(part, 'function_response') and part.function_response:
+                                func_resp = part.function_response.response
+                                if isinstance(func_resp, dict) and func_resp.get('plan_id'):
+                                    plan_id = func_resp.get('plan_id')
+                                    logger.info(f"Found saved plan ID: {plan_id}")
+            
+            # If we have meal_data from function call, return it
+            if saved_plan:
+                return saved_plan
+            
+            # If we have plan_id, retrieve from storage
+            if plan_id:
+                try:
+                    stored_plan = self.storage.get_weekly_plan_by_id(plan_id)
+                    if stored_plan:
+                        logger.info(f"Retrieved meal plan from storage: {plan_id}")
+                        return {
+                            "meal_plan": stored_plan.get('meal_plan', []),
+                            "grocery_list": stored_plan.get('shopping_list', {}),
+                            "summary": stored_plan.get('notes', 'Meal plan from storage')
+                        }
+                except Exception as e:
+                    logger.warning(f"Failed to retrieve plan from storage: {e}")
+            
+            # Look in agent text responses as fallback
+            for event in response:
+                if hasattr(event, 'content') and event.content:
+                    if hasattr(event.content, 'parts') and event.content.parts:
                         for part in event.content.parts:
                             if hasattr(part, 'text') and part.text:
-                                # Try to parse as JSON
                                 text = part.text.strip()
-                                # Remove markdown code blocks if present
-                                if text.startswith('```json'):
-                                    text = text[7:]
-                                if text.startswith('```'):
-                                    text = text[3:]
-                                if text.endswith('```'):
-                                    text = text[:-3]
-                                text = text.strip()
-                                
-                                try:
-                                    return json.loads(text)
-                                except json.JSONDecodeError:
-                                    # Fallback to text
-                                    return {"text_plan": part.text}
-            return {"events_count": len(response)}
+                                # Look for JSON patterns
+                                if '{"meal_plan"' in text or '"meal_plan":' in text:
+                                    # Try to extract JSON
+                                    import re
+                                    # Find JSON-like structures
+                                    json_pattern = r'\{[^}]*"meal_plan"[^}]*\[[^\]]*\][^}]*\}'
+                                    matches = re.findall(json_pattern, text, re.DOTALL)
+                                    
+                                    for match in matches:
+                                        try:
+                                            parsed = json.loads(match)
+                                            if isinstance(parsed, dict) and 'meal_plan' in parsed:
+                                                logger.info(f"Extracted meal plan from agent text")
+                                                return parsed
+                                        except json.JSONDecodeError:
+                                            continue
+            
+            # Fallback - create minimal structure
+            logger.warning(f"No meal plan extracted from {len(response)} events")
+            return {
+                "events_count": len(response),
+                "status": "no_meal_plan_extracted", 
+                "meal_plan": [],
+                "grocery_list": {},
+                "summary": "No valid meal plan found in agent response"
+            }
+        
         return {"raw_response": str(response)[:500]}
     
     def _prepare_meal_plan_for_agents(self, meal_plan_dict: Dict) -> Dict:
@@ -165,16 +265,41 @@ class OrchestratorAgent:
         }
         """
         if not meal_plan_dict:
-            return {"meal_plan": [], "summary": "No meal plan"}
+            logger.warning("No meal plan data provided to WeekPlanner")
+            return {"meal_plan": [], "summary": "No meal plan available"}
+        
+        # Check if extraction failed
+        if meal_plan_dict.get("status") == "no_meal_plan_extracted":
+            logger.warning("Meal plan extraction failed, providing empty plan to WeekPlanner")
+            return {"meal_plan": [], "summary": "Meal plan extraction failed"}
         
         # If it's already structured JSON with meal_plan key
         if isinstance(meal_plan_dict, dict) and "meal_plan" in meal_plan_dict:
+            meals = meal_plan_dict.get("meal_plan", [])
+            
+            # Handle both list and dict formats for meal_plan
+            if isinstance(meals, dict):
+                # Convert dict format from storage to list format for WeekPlanner
+                meal_list = []
+                for day_name, day_meals in meals.items():
+                    if isinstance(day_meals, dict):
+                        meal_list.append({
+                            "day": day_name,
+                            "breakfast": day_meals.get("breakfast", {}),
+                            "lunch": day_meals.get("lunch", {}),
+                            "dinner": day_meals.get("dinner", {})
+                        })
+                meals = meal_list
+                logger.info(f"Converted dict format to list format for WeekPlanner")
+            
+            logger.info(f"Prepared {len(meals)} days of meal data for WeekPlanner")
             return {
-                "meal_plan": meal_plan_dict.get("meal_plan", []),
-                "summary": meal_plan_dict.get("summary", "")
+                "meal_plan": meals,
+                "summary": meal_plan_dict.get("summary", "Meal plan from MealPlanner")
             }
         
         # Fallback
+        logger.warning(f"Unexpected meal plan format: {type(meal_plan_dict)}")
         return {"meal_plan": [], "summary": str(meal_plan_dict)[:200]}
     
     def _extract_grocery_list_from_meal_plan(self, meal_plan_dict: Dict) -> Dict:
@@ -193,11 +318,24 @@ class OrchestratorAgent:
         Returns grocery_list dict for GroceryPlanner.
         """
         if not meal_plan_dict:
+            logger.warning("No meal plan data provided to GroceryPlanner")
+            return {}
+        
+        # Check if extraction failed
+        if meal_plan_dict.get("status") == "no_meal_plan_extracted":
+            logger.warning("Meal plan extraction failed, no grocery list available")
             return {}
         
         if isinstance(meal_plan_dict, dict) and "grocery_list" in meal_plan_dict:
-            return meal_plan_dict["grocery_list"]
+            grocery_list = meal_plan_dict["grocery_list"]
+            if grocery_list:
+                total_items = sum(len(items) for items in grocery_list.values() if isinstance(items, list))
+                logger.info(f"Extracted grocery list with {total_items} items for GroceryPlanner")
+            else:
+                logger.warning("Grocery list is empty")
+            return grocery_list
         
+        logger.warning("No grocery_list found in meal plan data")
         return {}
     
     def _extract_schedule(self, response) -> Dict:
@@ -209,12 +347,56 @@ class OrchestratorAgent:
         return self._extract_meal_plan(response)  # Same pattern
     
     def _get_pantry_stock(self, family_id: str) -> Dict:
-        """Get current pantry stock from storage."""
+        """Get current pantry stock from storage with defaults."""
         try:
             pantry = self.storage.get_pantry(family_id)
-            return pantry if pantry else {}
-        except:
+            if pantry:
+                return pantry
+            
+            # Provide basic pantry stock for new families
+            default_pantry = {
+                'grains': [{'item': 'rice', 'quantity': '2 kg', 'expiry_date': '2024-12-31'}],
+                'spices': [{'item': 'salt', 'quantity': '500g', 'expiry_date': '2025-12-31'}],
+                'oils': [{'item': 'cooking oil', 'quantity': '1L', 'expiry_date': '2025-06-30'}]
+            }
+            
+            # Save default pantry for the family
+            self.storage.update_pantry_inventory(family_id, default_pantry)
+            return default_pantry
+        except Exception as e:
+            logger.error(f"Error getting pantry stock: {e}")
             return {}
+    
+    def _get_latest_family_plan(self, family_id: str) -> Dict:
+        """Get the most recent meal plan for a family from storage."""
+        try:
+            conn = self.storage._get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                SELECT meal_plan, shopping_list, week_start_date 
+                FROM weekly_plans 
+                WHERE family_id = ? 
+                ORDER BY week_start_date DESC 
+                LIMIT 1
+            ''', (family_id,))
+            
+            row = cursor.fetchone()
+            conn.close()
+            
+            if row:
+                import json
+                return {
+                    'meal_plan': json.loads(row[0]) if row[0] else {},
+                    'grocery_list': json.loads(row[1]) if row[1] else {},
+                    'summary': f"Latest meal plan from {row[2]}"
+                }
+            return {}
+        except Exception as e:
+            logger.error(f"Error getting latest plan: {e}")
+            return {}
+    
+
     
     def _generate_summary(self, result: Dict) -> str:
         """Generate execution summary."""

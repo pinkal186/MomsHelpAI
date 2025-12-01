@@ -11,28 +11,43 @@ import json
 logger = setup_logger(__name__)
 
 
-def get_activity_suggestions(category: str = "all", age_group: str = "all") -> Dict[str, Any]:
-    """Get activity suggestions from curated database."""
+def get_activity_suggestions(family_id: str) -> Dict[str, Any]:
+    """Get activity suggestions from family's specific activities in sample_family_data.json."""
     try:
-        with open('data/activities_database.json', 'r', encoding='utf-8') as f:
-            activities_db = json.load(f)
+        with open('data/sample_family_data.json', 'r', encoding='utf-8') as f:
+            family_data = json.load(f)
         
+        # Find the family by ID
+        target_family = None
+        for family_key, family_info in family_data.items():
+            if family_info.get('family_id') == family_id:
+                target_family = family_info
+                break
+        
+        if not target_family:
+            return {"status": "error", "error_message": f"Family with ID {family_id} not found"}
+        
+        # Get kids activities from the family data
+        kids_activities = target_family.get('kids_activities', {})
+        
+        if not kids_activities:
+            return {"status": "error", "error_message": "No kids activities found for this family"}
+        
+        # Convert to the expected format
         all_activities = []
-        if category == "all":
-            for cat_activities in activities_db.values():
-                all_activities.extend(cat_activities)
-        elif category in activities_db:
-            all_activities = activities_db[category]
-        else:
-            return {"status": "error", "error_message": f"Invalid category: {category}"}
+        for child_name, activities in kids_activities.items():
+            for activity in activities:
+                all_activities.append({
+                    "id": f"{family_id}_{child_name}_{activity['name']}",
+                    "name": activity['name'],
+                    "category": activity['category'],
+                    "participant": child_name,
+                    "schedule": activity['schedule'],
+                    "duration_minutes": activity.get('duration_minutes', 60),
+                    "location": activity.get('location', 'Local Area')
+                })
         
-        if age_group != "all":
-            all_activities = [act for act in all_activities if age_group in act.get('age_groups', [])]
-        
-        if not all_activities:
-            return {"status": "error", "error_message": "No activities found"}
-        
-        logger.info(f"Found {len(all_activities)} activities")
+        logger.info(f"Found {len(all_activities)} activities for family {family_id}")
         return {"status": "success", "activities": all_activities}
     except Exception as e:
         logger.error(f"Error: {str(e)}")
@@ -116,7 +131,7 @@ Tools: get_activity_suggestions, save_schedule_item"""
 === END DATA ===
 
 Task:
-1. Use 'get_activity_suggestions' to get age-appropriate activities
+1. Use 'get_activity_suggestions' to get femily activities based on meal times and free slots
 2. Create daily time-based schedule for 7 days:
    - Extract meal times and prep_time_minutes from the data above
    - Schedule: Breakfast (08:00), Lunch (13:00), Dinner (19:00)

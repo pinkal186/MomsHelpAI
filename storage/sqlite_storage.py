@@ -257,6 +257,34 @@ class SQLiteStorage(BaseStorage):
         
         return [row[0] for row in rows if row[0]]
     
+    def get_weekly_plan_by_id(self, plan_id: str) -> Dict:
+        """Retrieve a weekly plan by its plan_id."""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('''
+                SELECT meal_plan, schedule, shopping_list, week_start_date, approved
+                FROM weekly_plans 
+                WHERE plan_id = ?
+            ''', (plan_id,))
+            
+            row = cursor.fetchone()
+            if row:
+                return {
+                    'meal_plan': json.loads(row[0]) if row[0] else {},
+                    'schedule': json.loads(row[1]) if row[1] else {},
+                    'shopping_list': json.loads(row[2]) if row[2] else {},
+                    'week_start_date': row[3],
+                    'approved': row[4]
+                }
+            return {}
+        except Exception as e:
+            logger.error(f"Error retrieving plan {plan_id}: {e}")
+            return {}
+        finally:
+            conn.close()
+    
     def get_pantry(self, family_id: str) -> Dict:
         """Alias for get_pantry_inventory - returns pantry stock."""
         return self.get_pantry_inventory(family_id)

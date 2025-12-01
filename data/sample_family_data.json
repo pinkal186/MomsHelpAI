@@ -1,6 +1,6 @@
 {
   "family_sharma": {
-    "family_id": "sharma_family_001",
+    "family_id": "sharma_001",
     "family_name": "Sharma Family",
     "members": [
       {
@@ -15,7 +15,7 @@
         "age": 38,
         "role": "Father",
         "allergies": [],
-        "preferences": ["chicken curry", "biryani", "chole bhature"]
+        "preferences": ["veg curry", "biryani", "chole bhature"]
       },
       {
         "name": "Aarav",
@@ -32,7 +32,7 @@
         "preferences": ["dosa", "idli", "rajma chawal"]
       }
     ],
-    "dietary_restrictions": ["no beef", "vegetarian options needed"],
+    "dietary_restrictions": ["no_non_veg"],
     "preferred_cuisine": ["North Indian", "South Indian", "Continental"],
     "budget_weekly": 8000,
     "pantry_inventory": {
@@ -110,8 +110,70 @@
       }
     },
     "kids_activities": {
-      "Aarav": ["Cricket Coaching", "Swimming Classes", "Hindi Tuition"],
-      "Ananya": ["Kathak Dance Class", "Abacus Mental Math", "Art and Craft Workshop"]
+      "Aarav": [
+        {
+          "name": "Cricket Coaching",
+          "category": "sports",
+          "schedule": {
+            "days": ["Tuesday", "Thursday", "Saturday"],
+            "time": "17:00"
+          },
+          "duration_minutes": 90,
+          "location": "Society Ground"
+        },
+        {
+          "name": "Swimming Classes",
+          "category": "sports",
+          "schedule": {
+            "days": ["Monday", "Wednesday", "Friday"],
+            "time": "06:30"
+          },
+          "duration_minutes": 60,
+          "location": "Community Pool"
+        },
+        {
+          "name": "Hindi Tuition",
+          "category": "education",
+          "schedule": {
+            "days": ["Tuesday", "Thursday"],
+            "time": "15:30"
+          },
+          "duration_minutes": 60,
+          "location": "Sharma Ji Home"
+        }
+      ],
+      "Ananya": [
+        {
+          "name": "Kathak Dance Class",
+          "category": "arts",
+          "schedule": {
+            "days": ["Monday", "Wednesday"],
+            "time": "16:30"
+          },
+          "duration_minutes": 60,
+          "location": "Sangeet Mahal"
+        },
+        {
+          "name": "Abacus Mental Math",
+          "category": "education",
+          "schedule": {
+            "days": ["Friday"],
+            "time": "16:00"
+          },
+          "duration_minutes": 75,
+          "location": "Learning Center"
+        },
+        {
+          "name": "Art and Craft Workshop",
+          "category": "arts",
+          "schedule": {
+            "days": ["Saturday"],
+            "time": "15:00"
+          },
+          "duration_minutes": 90,
+          "location": "Creative Studio"
+        }
+      ]
     },
     "meal_preferences": {
       "breakfast_time": "08:00",
@@ -119,7 +181,197 @@
       "dinner_time": "20:30",
       "favorite_breakfasts": ["poha", "upma", "paratha with curd", "idli sambhar", "dosa"],
       "favorite_lunches": ["dal chawal", "rajma chawal", "chole with rice", "vegetable pulao"],
-      "favorite_dinners": ["paneer butter masala", "dal makhani", "chicken curry", "biryani", "palak paneer"]
+      "favorite_dinners": ["paneer butter masala", "dal makhani", "veg curry", "biryani", "palak paneer"]
+    }
+  },
+ "family_gonzalez": {
+    "family_id": "gonzalez_001",
+    "family_name": "Gonzalez Family",
+    "members": [
+      {
+        "name": "Maria",
+        "age": 39,
+        "role": "Mother",
+        "allergies": [],
+        "preferences": ["tacos", "quesadillas", "paella"]
+      },
+      {
+        "name": "Carlos",
+        "age": 42,
+        "role": "Father",
+        "allergies": [],
+        "preferences": ["carne asada", "enchiladas", "gazpacho"]
+      },
+      {
+        "name": "Luis",
+        "age": 15,
+        "role": "Son",
+        "allergies": [],
+        "preferences": ["burritos", "nachos", "pizza"]
+      },
+      {
+        "name": "Camila",
+        "age": 13,
+        "role": "Daughter",
+        "allergies": [],
+        "preferences": ["tortilla soup", "empanadas", "churros"]
+      },
+      {
+        "name": "Mateo",
+        "age": 7,
+        "role": "Son",
+        "allergies": ["peanuts" ,"pork"],
+        "preferences": ["quesadillas", "mac and cheese", "fruit salad"]
+      }
+    ],
+    "dietary_restrictions": ["no_pork"],
+    "preferred_cuisine": ["Mexican", "Spanish", "Tex-Mex"],
+    "budget_weekly": 9000,
+    "pantry_inventory": {
+      "corn_tortillas": {
+        "quantity": "30 pieces",
+        "category": "grains"
+      },
+      "black_beans": {
+        "quantity": "2kg",
+        "category": "protein"
+      },
+      "rice": {
+        "quantity": "4kg",
+        "category": "grains"
+      },
+      "olive_oil": {
+        "quantity": "1L",
+        "category": "spices"
+      },
+      "cheddar_cheese": {
+        "quantity": "500g",
+        "category": "dairy"
+      },
+      "tomato": {
+        "quantity": "2kg",
+        "category": "vegetables"
+      },
+      "onion": {
+        "quantity": "2kg",
+        "category": "vegetables"
+      },
+      "avocado": {
+        "quantity": "1kg",
+        "category": "vegetables"
+      },
+      "jalapeno": {
+        "quantity": "200g",
+        "category": "vegetables"
+      },
+      "chicken_breast": {
+        "quantity": "1.5kg",
+        "category": "protein"
+      },
+      "eggs": {
+        "quantity": "12",
+        "category": "protein"
+      },
+      "milk": {
+        "quantity": "2L",
+        "category": "dairy"
+      },
+      "flour": {
+        "quantity": "2kg",
+        "category": "grains"
+      },
+      "salsa": {
+        "quantity": "500g",
+        "category": "spices"
+      },
+      "cumin_powder": {
+        "quantity": "100g",
+        "category": "spices"
+      },
+      "paprika": {
+        "quantity": "100g",
+        "category": "spices"
+      },
+      "chili_powder": {
+        "quantity": "100g",
+        "category": "spices"
+      }
+    },
+    "kids_activities": {
+      "Luis": [
+        {
+          "name": "Soccer Practice",
+          "category": "sports",
+          "schedule": {
+            "days": ["Tuesday", "Thursday", "Saturday"],
+            "time": "16:00"
+          },
+          "duration_minutes": 90,
+          "location": "Sports Complex"
+        },
+        {
+          "name": "Guitar Lessons",
+          "category": "arts",
+          "schedule": {
+            "days": ["Wednesday"],
+            "time": "17:30"
+          },
+          "duration_minutes": 60,
+          "location": "Music Academy"
+        }
+      ],
+      "Camila": [
+        {
+          "name": "Ballet Class",
+          "category": "arts",
+          "schedule": {
+            "days": ["Monday", "Friday"],
+            "time": "17:00"
+          },
+          "duration_minutes": 75,
+          "location": "Dance Studio"
+        },
+        {
+          "name": "Art Club",
+          "category": "arts",
+          "schedule": {
+            "days": ["Saturday"],
+            "time": "14:00"
+          },
+          "duration_minutes": 120,
+          "location": "Community Center"
+        }
+      ],
+      "Mateo": [
+        {
+          "name": "Swimming Lessons",
+          "category": "sports",
+          "schedule": {
+            "days": ["Monday", "Wednesday"],
+            "time": "16:30"
+          },
+          "duration_minutes": 45,
+          "location": "Aquatic Center"
+        },
+        {
+          "name": "Story Time",
+          "category": "education",
+          "schedule": {
+            "days": ["Saturday"],
+            "time": "10:00"
+          },
+          "duration_minutes": 30,
+          "location": "Public Library"
+        }
+      ]
+    },
+    "meal_preferences": {
+      "breakfast_time": "07:30",
+      "lunch_time": "13:00",
+      "dinner_time": "20:00",
+      "favorite_breakfasts": ["huevos rancheros", "chilaquiles", "fruit salad", "toast with avocado"],
+      "favorite_lunches": ["chicken tacos", "bean burritos", "paella", "quesadillas"],
+      "favorite_dinners": ["enchiladas", "carne asada", "tortilla soup", "fajitas", "gazpacho"]
     }
   }
 }
