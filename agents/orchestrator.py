@@ -99,7 +99,7 @@ class OrchestratorAgent:
                     latest_plan = self._get_latest_family_plan(family_id)
                     if latest_plan and latest_plan.get('meal_plan'):
                         result["meal_plan"] = latest_plan
-                        logger.info("✓ Retrieved meal plan from storage as fallback")
+                        logger.info("Retrieved meal plan from storage as fallback")
                     else:
                         logger.warning("No fallback meal plan available")
                 except Exception as e:
@@ -250,19 +250,7 @@ class OrchestratorAgent:
     
     def _prepare_meal_plan_for_agents(self, meal_plan_dict: Dict) -> Dict:
         """Extract meal_plan array and summary for WeekPlanner.
-        
-        From MealPlanner output:
-        {
-          "meal_plan": [...],
-          "grocery_list": {...},
-          "summary": "..."
-        }
-        
-        Returns for WeekPlanner:
-        {
-          "meal_plan": [...],
-          "summary": "..."
-        }
+            
         """
         if not meal_plan_dict:
             logger.warning("No meal plan data provided to WeekPlanner")

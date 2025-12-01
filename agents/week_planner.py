@@ -76,7 +76,7 @@ class WeekPlannerAgent(BaseAgent):
     
     def __init__(self):
         instruction = """You plan weekly family schedules using activity database.
-
+mapping meal_plan dayes to date ensuring smoth  flow.do not ask question do your assumtion and must provide output insted of query
 Input (per architecture):
 {
   "week_start_date": "2025-12-02",
@@ -93,7 +93,7 @@ Output (per architecture):
   "weekly_summary": {"total_meals": 21, "total_activities": 5, "busy_days": [...]}
 }
 
-Tools: get_activity_suggestions, save_schedule_item"""
+Tools: get_activity_suggestions, save_schedule_item """
         
         tools = [
             FunctionTool(get_activity_suggestions),
@@ -154,6 +154,11 @@ Task:
   "weekly_summary": {{"total_meals": 21, "total_activities": 5}}
   "agent_suggation":{ "your suggation by seing all data, what woud be good or not, what is better way to handle with mininal text,and practicle advice"}
 }}
+
+CRITICAL REQUIREMENTS:
+- You MUST complete all 4 steps in sequence
+- Never stop after step 1 or 2 - always continue toto final outputa
+- The user is waiting for a complete week plan - do not give incomplete responses
 
 Return ONLY valid JSON!"""
         
